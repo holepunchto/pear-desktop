@@ -1,0 +1,6 @@
+[submodule "vendor"]
+	path = vendor
+	url = https://github.com/holepunchto/pear-docs
+[submodule "vendor/pear-docs"]
+	path = vendor/pear-docs
+	url = https://github.com/holepunchto/pear-docs
