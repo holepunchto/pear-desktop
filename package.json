@@ -29,5 +29,22 @@
   "devDependencies": {
     "brittle": "^3.4.0",
     "standard": "^17.1.0"
-  }
+  },
+  "license": "Apache-2.0",
+  "description": "> The Pear Runtime Pear Desktop Application",
+  "directories": {
+    "example": "examples",
+    "lib": "lib",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holepunchto/pear-desktop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/holepunchto/pear-desktop/issues"
+  },
+  "homepage": "https://github.com/holepunchto/pear-desktop#readme"
 }
