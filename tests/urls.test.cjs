@@ -27,7 +27,7 @@ test('check that all urls can be reached', async (t) => {
   }
 })
 
-async function readMarkdownFiles (folderPath = path.join(__dirname, '..')) {
+async function readMarkdownFiles (folderPath = path.join(__dirname, '../vendor/pear-docs')) {
   let result = []
   const files = await readdir(folderPath)
 
