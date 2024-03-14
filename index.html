@@ -221,6 +221,23 @@
     app-router[data-load="developer-tooling"] a:visited[href='/devtools'] {
       color: rgb(78, 250, 92);
     }
+   #clipboard-message {
+     position: fixed;
+     top: 30px;
+     width: 220px;
+     z-index: 99;
+     border: 1px solid #B0D944;
+     margin-left: calc(50vw - 120px);
+     border-radius: 10px;
+     padding-left: 20px;
+     opacity: 0;
+     transition: opacity 0.4s;
+   }
+
+   .fade-in {
+     transition: opacity 0.4s;
+     opacity: 1 !important;
+   }
   </style>
   <div id="bar"><pear-ctrl></pear-ctrl></div>
   <app-router docs-viewer="/documentation" developer-tooling="/devtools" system-status="/" data-load="system-status">
@@ -263,6 +280,11 @@
         </pre>
       </div>
     </header>
+    <section>
+      <div id="clipboard-message">
+        <p>Copied to clipboard</p>
+      </div>
+    </section>
     <section>
       <div class="col"><system-status></system-status></div>
     </section>
