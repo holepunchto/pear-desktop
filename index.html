@@ -305,6 +305,7 @@
             <div>
               <p id="platform-version"></p>
               <p id="app-version"></p>
+              <p id="os-version"></p>
             </div>
           `
           this.root = this.attachShadow({ mode: 'open' })
@@ -313,6 +314,7 @@
             this.root.appendChild(this.template.content.cloneNode(true))
             this.root.querySelector('#platform-version').innerText = `Pear Runtime ${platform.fork}.${platform.length}.${platform.key}`
             this.root.querySelector('#app-version').innerText = `Pear Desktop ${app.fork}.${app.length}.${app.key}`
+            this.root.querySelector('#os-version').innerText = `OS Platform ${navigator.userAgentData?.platform || navigator.platform || 'Unknown'}`
           })
         }
       })
