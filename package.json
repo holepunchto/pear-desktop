@@ -10,6 +10,7 @@
     "postinstall": "npm run bootstrap"
   },
   "pear": {
+    "routes": ".",
     "gui": {
       "backgroundColor": "#151517",
       "height": 780,
@@ -25,8 +26,8 @@
     "b4a": "^1.6.4",
     "bare-path": "^2.1.0",
     "bare-which": "^2.0.0",
-    "pear-bridge": "^1.0.0",
-    "pear-electron": "^1.0.10",
+    "pear-bridge": "^1.1.0",
+    "pear-electron": "^1.0.28",
     "pear-inspect": "^1.0.3",
     "redhat-overpass-font": "^1.0.0",
     "ws": "^8.16.0"
