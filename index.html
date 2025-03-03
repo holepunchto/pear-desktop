@@ -223,7 +223,7 @@
     }
   </style>
   <div id="bar"><pear-ctrl></pear-ctrl></div>
-  <app-router docs-viewer="/documentation" developer-tooling="/devtools" system-status="/" data-load="system-status">
+  <app-router docs-viewer="/documentation" developer-tooling="/devtools" system-status="/" data-load="system-status" not-found="not-found">
     <header>
       <div id="headin">
         <svg id="logo" width="102" height="146" viewBox="0 0 102 146" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -273,6 +273,9 @@
     <script type='module' src='./lib/docs-viewer.js'></script>
     <section>
       <div class="col"><developer-tooling></developer-tooling></div>
+    </section>
+    <section>
+      <not-found></not-found>
     </section>
     <script type="module">
       customElements.define('pear-version', class extends HTMLElement {
