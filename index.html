@@ -191,7 +191,8 @@
       top: 156px
     }
 
-    developer-tooling {
+    developer-tooling,
+    reset-applications {
       position: relative;
       top: 92px
     }
@@ -218,12 +219,15 @@
     app-router[data-load="docs-viewer"] a:visited[href='/documentation'],
     app-router[data-load="developer-tooling"] a[href='/devtools'],
     app-router[data-load="developer-tooling"] a:active[href='/devtools'],
-    app-router[data-load="developer-tooling"] a:visited[href='/devtools'] {
+    app-router[data-load="developer-tooling"] a:visited[href='/devtools'],
+    app-router[data-load="reset-applications"] a[href='/resetapps'],
+    app-router[data-load="reset-applications"] a:active[href='/resetapps'],
+    app-router[data-load="reset-applications"] a:visited[href='/resetapps'] {
       color: rgb(78, 250, 92);
     }
   </style>
   <div id="bar"><pear-ctrl></pear-ctrl></div>
-  <app-router docs-viewer="/documentation" developer-tooling="/devtools" system-status="/" data-load="system-status">
+  <app-router docs-viewer="/documentation" developer-tooling="/devtools" reset-applications="/resetapps" system-status="/" data-load="system-status">
     <header>
       <div id="headin">
         <svg id="logo" width="102" height="146" viewBox="0 0 102 146" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -254,6 +258,7 @@
           <a href="/">System Status</a>
           <a href="/documentation">Documentation</a>
           <a href="/devtools">Developer Tooling</a>
+          <a href="/resetapps">Reset Pear Apps</a>
         </nav>
         <pre>
           __ \    _ \   _` |   __|
@@ -318,6 +323,11 @@
       })
 
     </script>
+    <section>
+      <div class="col"><reset-applications></reset-applications></div>
+    </section>
+    <script type='module' src='./lib/reset-applications.js'></script>
+
     <pear-version></pear-version>
     <script>
       process.env.WS_NO_BUFFER_UTIL = false // ws buffer-util opt-out
