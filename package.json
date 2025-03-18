@@ -26,7 +26,6 @@
     "pear-inspect": "^1.0.3",
     "pear-ipc": "^3.3.0",
     "redhat-overpass-font": "^1.0.0",
-    "url-file-url": "^1.0.5",
     "which-runtime": "^1.2.1",
     "ws": "^8.16.0"
   },
