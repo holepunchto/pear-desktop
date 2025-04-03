@@ -1,11 +1,6 @@
-name: Build Status
+name: Build
+
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
   workflow_call:
     inputs:
       channel:
@@ -25,6 +20,13 @@ on:
           - rc
           - production
           - next
+      custom-commit:
+        type: string
+        description: Custom commit
+        required: false
+
+run-name: Build ${{ inputs.channel }}
+
 jobs:
   build:
     timeout-minutes: 60
@@ -41,8 +43,6 @@ jobs:
           seed: ${{ inputs.channel == 'next' && secrets.AUTOMATION_NEXT || secrets.AUTOMATION }}
           remote: ${{ inputs.channel == 'next' && secrets.AUTOMATION_PUBLIC_KEY_NEXT || secrets.AUTOMATION_PUBLIC_KEY }}
           job: pear-desktop
-          channel: ${{ inputs.channel-text || inputs.channel || 'preview' }}
-          commit: ${{ github.sha }}
+          channel: ${{ inputs.channel }}
+          commit: ${{ inputs.custom-commit || github.sha }}
           notify: ${{ inputs.notify && 'true' || 'false' }}
-      - run: npm install
-      - run: npm test
