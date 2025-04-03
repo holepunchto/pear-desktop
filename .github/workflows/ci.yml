@@ -6,18 +6,43 @@ on:
   pull_request:
     branches:
       - main
+  workflow_call:
+    inputs:
+      channel:
+        type: string
+        description: Channel to build
+        required: true
+        default: 'dev'
+  workflow_dispatch:
+    inputs:
+      channel:
+        type: choice
+        description: Select channel to build
+        required: true
+        options:
+          - dev
+          - stage
+          - rc
+          - production
+          - next
 jobs:
   build:
-    strategy:
-      matrix:
-        node-version: [lts/*]
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm test
+      - name: Setup repo
+        uses: holepunchto/actions/.github/steps/setup-repo@v1
+
+      - name: Keet Automation
+        uses: holepunchto/actions/.github/steps/keet-automation@v1
+        timeout-minutes: 15
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          seed: ${{ inputs.channel == 'next' && secrets.AUTOMATION_NEXT || secrets.AUTOMATION }}
+          remote: ${{ inputs.channel == 'next' && secrets.AUTOMATION_PUBLIC_KEY_NEXT || secrets.AUTOMATION_PUBLIC_KEY }}
+          job: pear-desktop
+          channel: ${{ inputs.channel-text || inputs.channel || 'preview' }}
+          commit: ${{ github.sha }}
+          notify: ${{ inputs.notify && 'true' || 'false' }}
+      - run: npm install
+      - run: npm test
