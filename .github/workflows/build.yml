@@ -1,0 +1,55 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      channel:
+        type: string
+        description: Channel to build
+        required: true
+        default: 'dev'
+  workflow_dispatch:
+    inputs:
+      channel:
+        type: choice
+        description: Select channel to build
+        required: true
+        options:
+          - dev
+          - stage
+          - rc
+          - production
+          - next
+      custom-commit:
+        type: string
+        description: Custom commit
+        required: false
+      dry-run:
+        type: choice
+        description: Dry run
+        required: false
+        options:
+          - false
+          - true
+run-name: Build ${{ inputs.channel }}
+
+jobs:
+  build:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repo
+        uses: holepunchto/actions/.github/steps/setup-repo@v1
+
+      - name: Keet Automation
+        uses: holepunchto/actions/.github/steps/keet-automation@v1
+        timeout-minutes: 15
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          seed: ${{ inputs.channel == 'next' && secrets.AUTOMATION_NEXT || secrets.AUTOMATION }}
+          remote: ${{ inputs.channel == 'next' && secrets.AUTOMATION_PUBLIC_KEY_NEXT || secrets.AUTOMATION_PUBLIC_KEY }}
+          job: pear-desktop
+          channel: ${{ inputs.channel }}
+          commit: ${{ inputs.custom-commit || github.sha }}
+          dry-run: ${{ inputs.dry-run }}
+          notify: 'true'
