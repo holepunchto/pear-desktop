@@ -24,7 +24,13 @@ on:
         type: string
         description: Custom commit
         required: false
-
+      dry-run:
+        type: choice
+        description: Dry run
+        required: false
+        options:
+          - false
+          - true
 run-name: Build ${{ inputs.channel }}
 
 jobs:
@@ -45,4 +51,5 @@ jobs:
           job: pear-desktop
           channel: ${{ inputs.channel }}
           commit: ${{ inputs.custom-commit || github.sha }}
-          notify: ${{ inputs.notify && 'true' || 'false' }}
+          dry-run: ${{ inputs.dry-run }}
+          notify: 'true'
