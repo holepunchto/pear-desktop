@@ -5,9 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "standard --fix",
-    "check-urls": "node test/urls.tests.cjs",
-    "bootstrap": "pear-electron",
-    "postinstall": "npm run bootstrap"
+    "check-urls": "node test/urls.tests.cjs"
   },
   "pear": {
     "routes": ".",
