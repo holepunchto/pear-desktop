@@ -188,7 +188,8 @@
       top: 146px
     }
 
-    developer-tooling {
+    developer-tooling,
+    reset-applications {
       position: relative;
       top: 92px
     }
@@ -216,6 +217,7 @@
     not-found="not-found"
     data-load="system-status"
     data-nav="app-nav"
+    reset-applications="/resetapps"
     >
     <header>
       <div id="headin">
@@ -247,8 +249,11 @@
           <a href="/">System Status</a>
           <a href="/documentation">Documentation</a>
           <a href="/devtools">Developer Tooling</a>
+          <a href="/resetapps">Reset Pear Apps</a>
         </app-nav>
         <pre id="impression">
+        </nav>
+        <pre>
           __ \    _ \   _` |   __|
           |   |   __/  (   |  |
           .__/  \___| \__,_| _|
@@ -328,6 +333,11 @@
       })
 
     </script>
+    <section>
+      <div class="col"><reset-applications></reset-applications></div>
+    </section>
+    <script type='module' src='./lib/reset-applications.js'></script>
+    
     <pear-version></pear-version>
     <script>
       process.env.WS_NO_BUFFER_UTIL = false // ws buffer-util opt-out
