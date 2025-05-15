@@ -51,15 +51,12 @@
       margin-top: -0.1rem;
     }
 
-    nav {
+    app-nav {
       height: 146px;
       float: left;
       padding-left: .75rem;
       padding-top: 2em;
-    }
-
-    nav>a {
-      display: block;
+      --active: rgb(78, 250, 92);
     }
 
     section {
@@ -85,7 +82,7 @@
       height: 170px;
       z-index: 10;
       background: rgba(21, 21, 23, 0.9);
-      padding-top: 20px;
+      padding-top: 5px;
       width: 100%;
       transition: background-color .4s, color .4s;
       position: fixed;
@@ -139,8 +136,8 @@
 
     #back,
     #mode {
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       position: absolute;
       right: 0.4rem;
       cursor: pointer;
@@ -149,11 +146,11 @@
     }
 
     #back {
-      top: 10px;
+      top: 82px;
     }
 
     #mode {
-      top: 60px;
+      top: 42px;
     }
 
     #bar {
@@ -188,7 +185,7 @@
     system-status,
     docs-viewer {
       position: relative;
-      top: 156px
+      top: 146px
     }
 
     developer-tooling {
@@ -204,26 +201,22 @@
       text-decoration: none;
     }
 
-    app-router a:visited,
-    app-router a:active,
-    app-router a {
-      color: #B0D944;
-    }
-
-    app-router[data-load="system-status"] a[href='/'],
-    app-router[data-load="system-status"] a:active[href='/'],
-    app-router[data-load="system-status"] a:visited[href='/'],
-    app-router[data-load="docs-viewer"] a[href='/documentation'],
-    app-router[data-load="docs-viewer"] a:active[href='/documentation'],
-    app-router[data-load="docs-viewer"] a:visited[href='/documentation'],
-    app-router[data-load="developer-tooling"] a[href='/devtools'],
-    app-router[data-load="developer-tooling"] a:active[href='/devtools'],
-    app-router[data-load="developer-tooling"] a:visited[href='/devtools'] {
-      color: rgb(78, 250, 92);
+    #impression {
+      font-size: 0.625rem;
+      position: absolute;
+      margin-top: -.7rem;
+      margin-right: 0.35rem;
     }
   </style>
   <div id="bar"><pear-ctrl></pear-ctrl></div>
-  <app-router docs-viewer="/documentation" developer-tooling="/devtools" system-status="/" data-load="system-status" not-found="not-found">
+  <app-router
+    docs-viewer="/documentation"
+    developer-tooling="/devtools"
+    system-status="/"
+    not-found="not-found"
+    data-load="system-status"
+    data-nav="app-nav"
+    >
     <header>
       <div id="headin">
         <svg id="logo" width="102" height="146" viewBox="0 0 102 146" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -250,12 +243,12 @@
         </svg>
         <img id="mode" src="/assets/light.svg" onclick="document.documentElement.classList.toggle('light');">
         <img id="back" src="/assets/arrow.svg" onclick="history.back()">
-        <nav>
+        <app-nav>
           <a href="/">System Status</a>
           <a href="/documentation">Documentation</a>
           <a href="/devtools">Developer Tooling</a>
-        </nav>
-        <pre>
+        </app-nav>
+        <pre id="impression">
           __ \    _ \   _` |   __|
           |   |   __/  (   |  |
           .__/  \___| \__,_| _|
@@ -286,28 +279,42 @@
             <style>
               :host > div {
                 position: fixed;
-                top: 96vh;
+                z-index: 99;
+                top: 4.1rem;
+                left: 0rem;
+                transform: translateX(calc(-100% + 1rem));
                 font-size: .6rem;
-                background: #1a1a1a;
+                background: rgb(26, 26, 26, 0.8);
                 color: white;
                 opacity: 1;
-                padding: 8px;
-                padding-top: 0px;
-                padding-bottom: 0px;
+                padding-top: 4px;
+                padding-right: 20px;
+                padding-left: 20px;
+                padding-bottom: 4px;
                 border-radius: .35rem;
-                border: 1px solid #3a4816;
-                transition: top 0.3s;
+                border: 1px solid rgba(58, 72, 22, 0.8);
+                transition: transform 0.3s;
                 display: block;
               }
 
               :host > div:hover {
-                top: 92vh;
-                transition: top 0.3s;
+                transform: translateX(0);
+                transition: transform 0.3s;
+              }
+
+              :host > div::after {
+                content: '⥽';
+                color: #B0D944;
+                position: absolute;
+                right: 5px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 1rem;
               }
             </style>
             <div>
-              <p id="platform-version"></p>
               <p id="app-version"></p>
+              <p id="platform-version"></p>
             </div>
           `
           this.root = this.attachShadow({ mode: 'open' })
