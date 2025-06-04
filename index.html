@@ -78,14 +78,14 @@
       display: inline-block;
     }
 
-    app-nav .parent-link .arrow {
+    app-nav .arrow {
       display: inline-block;
       transition: transform 0.3s ease;
-      margin-left: 0.5rem;
+      color: #B0D944;
     }
 
-    app-nav .has-subnav:hover .parent-link .arrow,
-    app-nav .has-subnav.active .parent-link .arrow {
+    app-nav .has-subnav:hover .arrow,
+    app-nav .has-subnav.active .arrow {
       transform: rotate(90deg);
     }
 
@@ -284,7 +284,10 @@
           <a href="/">System Status</a>
           <a href="/documentation">Documentation</a>
           <div class="has-subnav">
-            <a class="parent-link" href="/devtools">Developer Tooling<span class="arrow">▶</span></a>
+            <div class="parent-container">
+              <a class="parent-link" href="/devtools">Developer Tooling</a>
+              <span class="arrow">▶</span>
+            </div>
             <a class="sub-link" href="/devtools/drop">↳ Drop Pear Apps</a>
           </div>
         </app-nav>
