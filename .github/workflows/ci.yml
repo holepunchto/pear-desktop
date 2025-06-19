@@ -6,6 +6,7 @@ on:
   pull_request:
     branches:
       - main
+      - pear-next
   workflow_dispatch:
 jobs:
   build:
