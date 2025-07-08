@@ -59,6 +59,41 @@
       --active: rgb(78, 250, 92);
     }
 
+    app-nav .has-subnav {
+    display: flex;
+    flex-direction: column;
+    }
+
+    app-nav .has-subnav .sub-link {
+      display: none;
+      font-size: 0.8rem;
+      text-indent: 1.5rem;
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+      color: #B0D944;
+    }
+
+    app-nav .has-subnav:hover .sub-link,
+    app-nav .has-subnav.active .sub-link {
+      display: inline-block;
+    }
+
+    app-nav .arrow {
+      display: inline-block;
+      transition: transform 0.3s ease;
+      color: #B0D944;
+    }
+
+    app-nav .has-subnav:hover .arrow,
+    app-nav .has-subnav.active .arrow {
+      transform: rotate(90deg);
+    }
+
+    app-nav .sub-link:hover,
+    app-nav .has-subnav.active .sub-link {
+      font-size: medium;
+    }
+
     section {
       display: block;
     }
@@ -188,7 +223,8 @@
       top: 146px
     }
 
-    developer-tooling {
+    developer-tooling,
+    drop-applications {
       position: relative;
       top: 92px
     }
@@ -216,6 +252,7 @@
     not-found="not-found"
     data-load="system-status"
     data-nav="app-nav"
+    drop-applications="/devtools/drop"
     >
     <header>
       <div id="headin">
@@ -246,7 +283,13 @@
         <app-nav>
           <a href="/">System Status</a>
           <a href="/documentation">Documentation</a>
-          <a href="/devtools">Developer Tooling</a>
+          <div class="has-subnav">
+            <div class="parent-container">
+              <a class="parent-link" href="/devtools">Developer Tooling</a>
+              <span class="arrow">▶</span>
+            </div>
+            <a class="sub-link" href="/devtools/drop">↳ Drop Pear App Data</a>
+          </div>
         </app-nav>
         <pre id="impression">
           __ \    _ \   _` |   __|
@@ -256,17 +299,27 @@
         </pre>
       </div>
     </header>
+
     <section>
       <div class="col"><system-status></system-status></div>
     </section>
     <script type='module' src='/lib/system-status.js'></script>
+
     <section>
       <div class="col"><docs-viewer></docs-viewer></div>
     </section>
     <script type='module' src='/lib/docs-viewer.js'></script>
+
+    <section>
+      <div class="col"><drop-applications></drop-applications></div>
+    </section>
+    <script type='module' src='./lib/drop-applications.js'></script>
+
     <section>
       <div class="col"><developer-tooling></developer-tooling></div>
     </section>
+    <script type='module' src='/lib/devtools.js'></script>
+    
     <section>
       <not-found></not-found>
     </section>
@@ -328,11 +381,11 @@
       })
 
     </script>
+
     <pear-version></pear-version>
     <script>
       process.env.WS_NO_BUFFER_UTIL = false // ws buffer-util opt-out
     </script>
-    <script type='module' src='/lib/devtools.js'></script>
   </app-router>
   <script type='module' src='/lib/app-router.js'></script>
 </body>
