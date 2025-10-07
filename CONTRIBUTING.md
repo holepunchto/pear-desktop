@@ -1,15 +1,15 @@
 # Contributing to Pear Runtime
 
-Pear is an Open Source Project, authored & maintained by Holepunch. 
+Pear is an Open Source Project, authored & maintained by Holepunch.
 
 The source is open to use as per the [LICENSE](./LICENSE).
- 
+
 Be aware that **any pull-request or issue may be closed without explanation**.
 
 ## Issues
 
-- Feature requests are welcome. 
-- For bug reports, please provide a failing test case or steps to reproduce. 
+- Feature requests are welcome.
+- For bug reports, please provide a failing test case or steps to reproduce.
 
 ## Pull Request
 

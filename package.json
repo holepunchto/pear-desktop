@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "standard --fix",
+    "test": "prettier --check .",
+    "format": "prettier --check --write .",
     "check-urls": "node test/urls.tests.cjs"
   },
   "pear": {
@@ -34,6 +35,8 @@
   },
   "devDependencies": {
     "brittle": "^3.4.0",
+    "prettier": "^3.6.2",
+    "prettier-config-holepunch": "^2.0.0",
     "standard": "^17.1.0"
   },
   "license": "Apache-2.0",
