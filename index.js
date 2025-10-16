@@ -8,4 +8,4 @@ await bridge.ready()
 const runtime = new Runtime()
 const pipe = await runtime.start({ bridge })
 
-Pear.teardown(() => pipe.destroy())
+pipe.on('close', () => Pear.exit())
