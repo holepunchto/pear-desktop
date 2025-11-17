@@ -1,5 +1,9 @@
 # Pear Desktop Changelog
 
+## v2.0.1
+
+- encoding fix
+
 ## v2.0.0
 
 - Pear v2 migration
