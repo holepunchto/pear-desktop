@@ -1,17 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <body>
   <style>
     @font-face {
       font-family: 'overpass-mono';
-      src: url('~redhat-overpass-font/webfonts/overpass-mono-webfont/overpass-mono-regular.woff2') format('woff2');
+      src: url('~redhat-overpass-font/webfonts/overpass-mono-webfont/overpass-mono-regular.woff2')
+        format('woff2');
       font-weight: 400;
       font-style: normal;
     }
 
     @font-face {
       font-family: 'overpass-mono';
-      src: url('~redhat-overpass-font/webfonts/overpass-mono-webfont/overpass-mono-bold.woff2') format('woff2');
+      src: url('~redhat-overpass-font/webfonts/overpass-mono-webfont/overpass-mono-bold.woff2')
+        format('woff2');
       font-weight: 600;
       font-style: normal;
     }
@@ -23,7 +25,9 @@
       font-family: 'overpass-mono';
       -webkit-font-smoothing: antialiased;
       color: #efeaea;
-      transition: background-color .4s, color .4s;
+      transition:
+        background-color 0.4s,
+        color 0.4s;
     }
 
     ::-webkit-scrollbar {
@@ -51,15 +55,12 @@
       margin-top: -0.1rem;
     }
 
-    nav {
+    app-nav {
       height: 146px;
       float: left;
-      padding-left: .75rem;
+      padding-left: 0.75rem;
       padding-top: 2em;
-    }
-
-    nav>a {
-      display: block;
+      --active: rgb(78, 250, 92);
     }
 
     section {
@@ -68,7 +69,7 @@
 
     pre {
       background: none;
-      color: #B0D944;
+      color: #b0d944;
       font-family: overpass-mono;
       border: none;
       height: 146px;
@@ -85,9 +86,11 @@
       height: 170px;
       z-index: 10;
       background: rgba(21, 21, 23, 0.9);
-      padding-top: 20px;
+      padding-top: 5px;
       width: 100%;
-      transition: background-color .4s, color .4s;
+      transition:
+        background-color 0.4s,
+        color 0.4s;
       position: fixed;
     }
 
@@ -100,9 +103,9 @@
     }
 
     h1 {
-      padding: .5rem;
-      border-right: 1px solid #B0D944;
-      border-bottom: 1px solid #B0D944;
+      padding: 0.5rem;
+      border-right: 1px solid #b0d944;
+      border-bottom: 1px solid #b0d944;
       display: inline-block;
       padding-right: 0.75em;
       padding-left: 0.5em;
@@ -120,11 +123,11 @@
       margin-block-start: 1rem;
       margin-block-end: 0;
       padding: 1px;
-      font-size: .825rem
+      font-size: 0.825rem;
     }
 
     blockquote::before {
-      content: "ℹ";
+      content: 'ℹ';
       float: left;
       font-size: 1.625rem;
       margin-left: 1rem;
@@ -139,21 +142,21 @@
 
     #back,
     #mode {
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       position: absolute;
       right: 0.4rem;
       cursor: pointer;
       user-select: none;
-      opacity: .65;
+      opacity: 0.65;
     }
 
     #back {
-      top: 10px;
+      top: 82px;
     }
 
     #mode {
-      top: 60px;
+      top: 42px;
     }
 
     #bar {
@@ -162,7 +165,7 @@
       padding: 0;
       border-top-left-radius: 4px;
       border-top-right-radius: 4px;
-      color: #B0D944;
+      color: #b0d944;
       white-space: nowrap;
       box-sizing: border-box;
       position: fixed;
@@ -173,14 +176,14 @@
     }
 
     #bar:hover {
-      outline: #B0D944;
+      outline: #b0d944;
     }
 
     pear-ctrl {
       margin-top: 9px;
     }
 
-    pear-ctrl[data-platform="darwin"] {
+    pear-ctrl[data-platform='darwin'] {
       margin-top: 16px;
       margin-left: 8px;
     }
@@ -188,74 +191,98 @@
     system-status,
     docs-viewer {
       position: relative;
-      top: 156px
+      top: 146px;
     }
 
     developer-tooling {
       position: relative;
-      top: 92px
+      top: 92px;
     }
 
     a:visited,
     a:active,
     a {
-      color: #B0D944;
+      color: #b0d944;
       outline: none;
       text-decoration: none;
     }
 
-    app-router a:visited,
-    app-router a:active,
-    app-router a {
-      color: #B0D944;
-    }
-
-    app-router[data-load="system-status"] a[href='/'],
-    app-router[data-load="system-status"] a:active[href='/'],
-    app-router[data-load="system-status"] a:visited[href='/'],
-    app-router[data-load="docs-viewer"] a[href='/documentation'],
-    app-router[data-load="docs-viewer"] a:active[href='/documentation'],
-    app-router[data-load="docs-viewer"] a:visited[href='/documentation'],
-    app-router[data-load="developer-tooling"] a[href='/devtools'],
-    app-router[data-load="developer-tooling"] a:active[href='/devtools'],
-    app-router[data-load="developer-tooling"] a:visited[href='/devtools'] {
-      color: rgb(78, 250, 92);
+    #impression {
+      font-size: 0.625rem;
+      position: absolute;
+      margin-top: -0.7rem;
+      margin-right: 0.35rem;
     }
   </style>
   <div id="bar"><pear-ctrl></pear-ctrl></div>
-  <app-router docs-viewer="/documentation" developer-tooling="/devtools" system-status="/" data-load="system-status">
+  <app-router
+    docs-viewer="/documentation"
+    developer-tooling="/devtools"
+    system-status="/"
+    not-found="not-found"
+    data-load="system-status"
+    data-nav="app-nav"
+  >
     <header>
       <div id="headin">
-        <svg id="logo" width="102" height="146" viewBox="0 0 102 146" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          id="logo"
+          width="102"
+          height="146"
+          viewBox="0 0 102 146"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <g clip-path="url(#clip0_8912_10861)">
             <path d="M47.4056 0.838379H54.5943V15.0361H47.4056V0.838379Z" fill="#B0D944" />
-            <path d="M43.8113 19.5305V22.406H36.6226V26.0004H65.3774V22.406H58.1887V16.8347H51V19.5305H43.8113Z" fill="#B0D944" />
+            <path
+              d="M43.8113 19.5305V22.406H36.6226V26.0004H65.3774V22.406H58.1887V16.8347H51V19.5305H43.8113Z"
+              fill="#B0D944"
+            />
             <path d="M72.5662 27.7974H51V30.4931H29.4339V36.963H72.5662V27.7974Z" fill="#B0D944" />
             <path d="M79.7548 38.7593H51V41.455H22.2451V47.9249H79.7548V38.7593Z" fill="#B0D944" />
             <path d="M79.7548 49.7219H51V52.4177H22.2451V58.8875H79.7548V49.7219Z" fill="#B0D944" />
             <path d="M86.9436 60.6846H51V63.3803H15.0565V69.8502H86.9436V60.6846Z" fill="#B0D944" />
             <path d="M86.9436 71.6481H51V74.3438H15.0565V80.8137H86.9436V71.6481Z" fill="#B0D944" />
             <path d="M94.1323 82.61H51V85.3058H7.86774V91.7756H94.1323V82.61Z" fill="#B0D944" />
-            <path d="M101.321 93.5726H51V96.2684H0.679016V102.738H101.321V93.5726Z" fill="#B0D944" />
-            <path d="M101.321 104.536H51V107.232H0.679016V113.702H101.321V104.536Z" fill="#B0D944" />
-            <path d="M101.321 115.499H51V118.195H0.679016V124.664H101.321V115.499Z" fill="#B0D944" />
+            <path
+              d="M101.321 93.5726H51V96.2684H0.679016V102.738H101.321V93.5726Z"
+              fill="#B0D944"
+            />
+            <path
+              d="M101.321 104.536H51V107.232H0.679016V113.702H101.321V104.536Z"
+              fill="#B0D944"
+            />
+            <path
+              d="M101.321 115.499H51V118.195H0.679016V124.664H101.321V115.499Z"
+              fill="#B0D944"
+            />
             <path d="M86.9436 126.461H51V129.156H15.0565V135.626H86.9436V126.461Z" fill="#B0D944" />
             <path d="M72.5662 137.424H51V140.12H29.4339V144.613H72.5662V137.424Z" fill="#B0D944" />
           </g>
           <defs>
             <clipPath id="clip0_8912_10861">
-              <rect width="100.642" height="145.571" fill="white" transform="translate(0.679016 0.214233)" />
+              <rect
+                width="100.642"
+                height="145.571"
+                fill="white"
+                transform="translate(0.679016 0.214233)"
+              />
             </clipPath>
           </defs>
         </svg>
-        <img id="mode" src="/assets/light.svg" onclick="document.documentElement.classList.toggle('light');">
-        <img id="back" src="/assets/arrow.svg" onclick="history.back()">
-        <nav>
+        <img
+          id="mode"
+          src="/assets/light.svg"
+          onclick="document.documentElement.classList.toggle('light');"
+        />
+        <img id="back" src="/assets/arrow.svg" onclick="history.back()" />
+        <app-nav>
           <a href="/">System Status</a>
           <a href="/documentation">Documentation</a>
           <a href="/devtools">Developer Tooling</a>
-        </nav>
-        <pre>
+        </app-nav>
+        <pre id="impression">
           __ \    _ \   _` |   __|
           |   |   __/  (   |  |
           .__/  \___| \__,_| _|
@@ -266,63 +293,84 @@
     <section>
       <div class="col"><system-status></system-status></div>
     </section>
-    <script type='module' src='./lib/system-status.js'></script>
+    <script type="module" src="/lib/system-status.js"></script>
     <section>
       <div class="col"><docs-viewer></docs-viewer></div>
     </section>
-    <script type='module' src='./lib/docs-viewer.js'></script>
+    <script type="module" src="/lib/docs-viewer.js"></script>
     <section>
       <div class="col"><developer-tooling></developer-tooling></div>
     </section>
+    <section>
+      <not-found></not-found>
+    </section>
     <script type="module">
-      customElements.define('pear-version', class extends HTMLElement {
-        constructor () {
-          super()
-          this.template = document.createElement('template')
-          this.template.innerHTML = `
+      customElements.define(
+        'pear-version',
+        class extends HTMLElement {
+          constructor() {
+            super()
+            this.template = document.createElement('template')
+            this.template.innerHTML = `
             <style>
               :host > div {
                 position: fixed;
-                top: 96vh;
+                z-index: 99;
+                top: 4.1rem;
+                left: 0rem;
+                transform: translateX(calc(-100% + 1rem));
                 font-size: .6rem;
-                background: #1a1a1a;
+                background: rgb(26, 26, 26, 0.8);
                 color: white;
                 opacity: 1;
-                padding: 8px;
-                padding-top: 0px;
-                padding-bottom: 0px;
+                padding-top: 4px;
+                padding-right: 20px;
+                padding-left: 20px;
+                padding-bottom: 4px;
                 border-radius: .35rem;
-                border: 1px solid #3a4816;
-                transition: top 0.3s;
+                border: 1px solid rgba(58, 72, 22, 0.8);
+                transition: transform 0.3s;
                 display: block;
               }
 
               :host > div:hover {
-                top: 92vh;
-                transition: top 0.3s;
+                transform: translateX(0);
+                transition: transform 0.3s;
+              }
+
+              :host > div::after {
+                content: '⥽';
+                color: #B0D944;
+                position: absolute;
+                right: 5px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 1rem;
               }
             </style>
             <div>
-              <p id="platform-version"></p>
               <p id="app-version"></p>
+              <p id="platform-version"></p>
             </div>
           `
-          this.root = this.attachShadow({ mode: 'open' })
+            this.root = this.attachShadow({ mode: 'open' })
 
-          Pear.versions().then(({ app, platform }) => {
-            this.root.appendChild(this.template.content.cloneNode(true))
-            this.root.querySelector('#platform-version').innerText = `Pear Runtime ${platform.fork}.${platform.length}.${platform.key}`
-            this.root.querySelector('#app-version').innerText = `Pear Desktop ${app.fork}.${app.length}.${app.key}`
-          })
+            Pear.versions().then(({ app, platform }) => {
+              this.root.appendChild(this.template.content.cloneNode(true))
+              this.root.querySelector('#platform-version').innerText =
+                `Pear Runtime ${platform.fork}.${platform.length}.${platform.key}`
+              this.root.querySelector('#app-version').innerText =
+                `Pear Desktop ${app.fork}.${app.length}.${app.key}`
+            })
+          }
         }
-      })
-
+      )
     </script>
     <pear-version></pear-version>
     <script>
       process.env.WS_NO_BUFFER_UTIL = false // ws buffer-util opt-out
     </script>
-    <script type='module' src='./lib/devtools.js'></script>
+    <script type="module" src="/lib/devtools.js"></script>
   </app-router>
-  <script type='module' src='./lib/app-router.js'></script>
+  <script type="module" src="/lib/app-router.js"></script>
 </body>

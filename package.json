@@ -1,34 +1,39 @@
 {
   "name": "pear-desktop",
   "version": "1.0.0",
-  "main": "index.html",
   "type": "module",
   "scripts": {
-    "test": "standard --fix",
+    "test": "prettier --check .",
+    "format": "prettier --check --write .",
     "check-urls": "node test/urls.tests.cjs"
   },
   "pear": {
+    "pre": "pear-electron/pre",
+    "routes": ".",
     "gui": {
       "backgroundColor": "#151517",
       "height": 780,
       "width": 1120
     }
   },
-  "standard": {
-    "globals": [
-      "Pear"
-    ]
-  },
   "dependencies": {
     "b4a": "^1.6.4",
     "bare-path": "^2.1.0",
     "bare-which": "^2.0.0",
+    "bufferutil": "^4.0.9",
+    "pear-bridge": "^1.2.0",
+    "pear-dump": "^1.0.0",
+    "pear-electron": "^1.7.20",
     "pear-inspect": "^1.0.3",
+    "pear-opwait": "^1.0.0",
     "redhat-overpass-font": "^1.0.0",
+    "utf-8-validate": "^6.0.5",
     "ws": "^8.16.0"
   },
   "devDependencies": {
     "brittle": "^3.4.0",
+    "prettier": "^3.6.2",
+    "prettier-config-holepunch": "^2.0.0",
     "standard": "^17.1.0"
   },
   "license": "Apache-2.0",
