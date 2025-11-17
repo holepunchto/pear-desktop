@@ -1,5 +1,10 @@
 # Pear Desktop Changelog
 
+## v2.0.0
+
+- Pear v2 migration
+- Routing support
+
 ## v1.2.0
 
 ### Features
