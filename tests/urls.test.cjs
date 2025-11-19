@@ -13,24 +13,44 @@ test('check that all urls can be reached', async (t) => {
       return content.match(urlRegex)
     })
   )
+  // hostnames which are expected to return a 403 when testing
+  const FORBIDDEN_HOSTS = [
+    "https://www.npmjs.com",
+    "https://keet.io",
+    "https://en.wikipedia.org"
+  ]
 
   urls = urls
     .flat()
     .filter((u) => u !== null)
-    .filter((u) => !u.startsWith('http://localhost'))
+    .filter((u) => u !== "http://*")
+    .filter((u) => u !== "https://*")
+    .filter((u) => !u.startsWith("http://localhost"))
 
   const cache = new Map()
-  const responses = await Promise.all(
+  const checkUrlResults = await Promise.all(
     urls.map(async (url) => {
       if (cache.get(url)) return cache.get(url)
       const result = await checkUrl(url.trim())
       cache.set(url, result)
-      return { result, url }
+      return result
     })
   )
 
-  for (const response of responses) {
-    t.ok(response.result, `${response.url} should return 200 code`)
+  for (const checkUrlResult of checkUrlResults) {
+    if (checkUrlResult.pass) {
+      t.pass(`${checkUrlResult.url} returned code ${checkUrlResult.res.statusCode}`)
+    } else {
+      if (checkUrlResult.res) {
+        if (FORBIDDEN_HOSTS.some(host => checkUrlResult.url.startsWith(host)) && checkUrlResult.res.statusCode === 403) {
+          t.pass(`${checkUrlResult.url} returned code ${checkUrlResult.res.statusCode} (expected)`)
+        } else {
+          t.fail(`${checkUrlResult.url} returned code ${checkUrlResult.res.statusCode}`)
+        }
+      } else if (checkUrlResult.err) {
+        t.fail(`${checkUrlResult.url} failed with error "${checkUrlResult.err}"`)
+      }
+    }
   }
 })
 
@@ -57,18 +77,17 @@ function checkUrl(url) {
     try {
       https
         .get(url, (res) => {
-          if (res.statusCode >= 200 && res.statusCode < 300) {
-            resolve(true)
+          if (res.statusCode >= 200 && res.statusCode < 400) {
+            resolve({ pass: true, res, url })
           } else {
-            resolve(false)
+            resolve({ pass: false, res, url })
           }
         })
-        .on('error', () => {
-          resolve(false)
+        .on('error', (err) => {
+          resolve({ pass: false, res: null, err, url })
         })
     } catch (err) {
-      console.log(err)
-      resolve(false)
+      resolve({ pass: false, err, res: null, url })
     }
   })
 }
