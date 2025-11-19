@@ -10,6 +10,29 @@
   "pear": {
     "pre": "pear-electron/pre",
     "routes": ".",
+    "stage": {
+      "ignore": [
+        ".git",
+        ".gitattributes",
+        ".gitignore",
+        ".github",
+        ".DS_Store",
+        ".prettierignore",
+        "prebuilds",
+        "coverage",
+        ".vscode",
+        "corestore",
+        "test",
+        "examples",
+        "todo",
+        "scripts",
+        "sidecar.crash.log",
+        "electron-main.crash.log",
+        "cli.crash.log",
+        "package-lock.json",
+        "node_modules/.package-lock.json"
+      ]
+    },
     "gui": {
       "backgroundColor": "#151517",
       "height": 780,
