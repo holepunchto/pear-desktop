@@ -1,5 +1,9 @@
 # Pear Desktop Changelog
 
+## v2.0.6
+
+- icon positioning
+
 ## v2.0.5
 
 - docs fixes
