@@ -1,5 +1,9 @@
 # Pear Desktop Changelog
 
+## v2.0.5
+
+- docs fixes
+
 ## v2.0.4
 
 - bump docs
