@@ -1,0 +1,59 @@
+{
+  "devtools-frontend": {
+    "devtools-frontend/third_party/node/linux": [
+      "13c495c7b8852692422e68653099facad6a3d425"
+    ],
+    "devtools-frontend/third_party/node/mac": [
+      "aaffe24f139215b5f4246f69ef4eefbf400956be"
+    ],
+    "devtools-frontend/third_party/node/mac_arm64": [
+      "1db2bd673e8633aa5e9450caa0e8f2c4702feb7e"
+    ],
+    "devtools-frontend/scripts/ai_assistance/suite/outputs": [
+      "8aaaea341cac9e6dad90a0685f4eeae39fabb9f655761eed9c3af16795a40f14"
+    ],
+    "devtools-frontend/third_party/node/win": [
+      "486cafc97d0ef0947aed77c0d258d1a5606455c4"
+    ]
+  },
+  "devtools-frontend/buildtools": {
+    "devtools-frontend/buildtools/win-format": [
+      "565cab9c66d61360c27c7d4df5defe1a78ab56d3"
+    ],
+    "devtools-frontend/buildtools/mac-format": [
+      "7d46d237f9664f41ef46b10c1392dcb559250f25"
+    ],
+    "devtools-frontend/buildtools/mac_arm64-format": [
+      "8503422f469ae56cc74f0ea2c03f2d872f4a2303"
+    ],
+    "devtools-frontend/buildtools/linux64-format": [
+      "79a7b4e5336339c17b828de10d80611ff0f85961"
+    ]
+  },
+  "devtools-frontend/build": {
+    "devtools-frontend/build/linux/debian_bullseye_amd64-sysroot": [
+      "36a164623d03f525e3dfb783a5e9b8a00e98e1ddd2b5cff4e449bd016dd27e50"
+    ],
+    "devtools-frontend/build/linux/debian_bullseye_arm64-sysroot": [
+      "2f915d821eec27515c0c6d21b69898e23762908d8d7ccc1aa2a8f5f25e8b7e18"
+    ],
+    "devtools-frontend/build/linux/debian_bullseye_armhf-sysroot": [
+      "47b3a0b161ca011b2b33d4fc1ef6ef269b8208a0b7e4c900700c345acdfd1814"
+    ],
+    "devtools-frontend/build/linux/debian_bullseye_i386-sysroot": [
+      "63f0e5128b84f7b0421956a4a40affa472be8da0e58caf27e9acbc84072daee7"
+    ],
+    "devtools-frontend/build/linux/debian_bullseye_mips64el-sysroot": [
+      "58f8594905bfe0fa0b7c7a7e882f01725455d07b7161e6539de5169867009b9f"
+    ],
+    "devtools-frontend/build/linux/debian_bullseye_mipsel-sysroot": [
+      "2098b42d9698f5c8a15683abbf6d424b7f56200bd2488198e15f31554acb391f"
+    ],
+    "devtools-frontend/build/linux/debian_bullseye_ppc64el-sysroot": [
+      "485f85dde52830594f7b58ad53b9ca8ff6088b397cacb52aff682be5ffd6f198"
+    ],
+    "devtools-frontend/build/linux/debian_trixie_riscv64-sysroot": [
+      "5c8ef4067f41a625d81113a6292180acf4ef49a2ffe015c2779123c133b8e250"
+    ]
+  }
+}
