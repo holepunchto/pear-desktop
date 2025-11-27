@@ -5,7 +5,8 @@
   "scripts": {
     "test": "prettier --check .",
     "format": "prettier --check --write .",
-    "check-urls": "node test/urls.tests.cjs"
+    "check-urls": "node tests/urls.test.cjs",
+    "build-devtools": "./scripts/build-devtools.sh"
   },
   "pear": {
     "pre": "pear-electron/pre",
@@ -30,7 +31,8 @@
         "electron-main.crash.log",
         "cli.crash.log",
         "package-lock.json",
-        "node_modules/.package-lock.json"
+        "node_modules/.package-lock.json",
+        "vendor/chromium"
       ]
     },
     "gui": {
