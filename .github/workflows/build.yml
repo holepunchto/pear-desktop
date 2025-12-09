@@ -18,8 +18,6 @@ on:
           - dev
           - stage
           - rc
-          - production
-          - next
       custom-commit:
         type: string
         description: Custom commit
@@ -29,8 +27,8 @@ on:
         description: Dry run
         required: false
         options:
-          - false
           - true
+          - false
 run-name: Build ${{ inputs.channel }}
 
 jobs:
@@ -41,7 +39,7 @@ jobs:
       - name: Setup repo
         uses: holepunchto/actions/.github/steps/setup-repo@v1
 
-      - name: Keet Automation
+      - name: Build
         uses: holepunchto/actions/.github/steps/keet-automation@v1
         timeout-minutes: 15
         with:
