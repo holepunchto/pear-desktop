@@ -1,5 +1,10 @@
 # Pear Desktop Changelog
 
+## v2.0.7
+
+- adjusted table render
+- adjust assets to docs update
+
 ## v2.0.6
 
 - icon positioning
