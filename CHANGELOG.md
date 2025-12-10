@@ -1,5 +1,10 @@
 # Pear Desktop Changelog
 
+## v2.0.8
+
+- bump docs
+- fix asset links in docs
+
 ## v2.0.7
 
 - adjusted table render
