@@ -5,7 +5,7 @@
   "scripts": {
     "test": "prettier --check .",
     "format": "prettier --check --write .",
-    "check-urls": "node test/urls.tests.cjs"
+    "check-urls": "node tests/urls.test.cjs"
   },
   "pear": {
     "pre": "pear-electron/pre",
