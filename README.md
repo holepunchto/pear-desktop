@@ -4,19 +4,28 @@
 
 Pear Desktop is the [pear://runtime](pear://runtime) Application.
 
-## Usage
+## Prerequisites
 
-```
-pear run pear://runtime
-```
+Before running the application, ensure you have the Pear Runtime installed:
+- [Install Pear Runtime](https://docs.pears.com)
 
 ## Development
 
-```
-git clone https://github.com/holepunchto/pear-desktop
-cd pear-desktop
-pear run --dev .
-```
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/holepunchto/pear-desktop](https://github.com/holepunchto/pear-desktop)
+   cd pear-desktop
+   ```
+
+2. Install dependencies (required for development tools and auditing):
+   ```bash
+   npm install
+   ```
+
+3. Run the application in development mode:
+   ```bash
+   pear run --dev .
+   ```
 
 ## License
 
