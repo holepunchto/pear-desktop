@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 
 export default function App() {
-  const [version, setVersion] = useState('...')
+  const [config, setConfig] = useState({ version: '...', key: '' })
   const [status, setStatus] = useState('')
 
   useEffect(() => {
-    window.bridge.getVersion().then((nextVersion) => {
-      setVersion(String(nextVersion))
+    window.bridge.getConfig().then((nextConfig) => {
+      setConfig(nextConfig || { version: '...', key: '' })
     })
 
     const off = window.bridge.onRuntimeEvent((eventName) => {
@@ -33,10 +33,12 @@ export default function App() {
     <>
       <img src='/assets/pears.svg' alt='Pears' />
       <h1>
-        VERSION {version}
+        VERSION {String(config.version)}
         {status ? `: ${status}` : ''}
       </h1>
-      <h2>It's much improved</h2>
+      <p>KEY {String(config.key || '')}</p>
+      <h2>It's even yet mucher improveder</h2>
+      <h2>TWICE</h2>
     </>
   )
 }

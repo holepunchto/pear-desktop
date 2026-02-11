@@ -83,7 +83,7 @@ async function createWindow() {
 }
 
 ipcMain.handle('runtime:applyUpdate', () => getRuntime().applyUpdate())
-ipcMain.handle('runtime:getVersion', () => pearConfig.version)
+ipcMain.handle('runtime:getConfig', () => pearConfig)
 ipcMain.handle('runtime:startWorker', () => {
   getWorker()
   return true
