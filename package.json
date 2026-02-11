@@ -16,7 +16,6 @@
     "productName": "Pear"
   },
   "dependencies": {
-    "pear-container": "^0.1.0",
     "pear-runtime": "^0.1.0"
   },
   "devDependencies": {
