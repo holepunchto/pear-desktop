@@ -1,70 +1,38 @@
 {
   "name": "pear-desktop",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "type": "module",
+  "main": "electron/main.js",
   "scripts": {
-    "test": "prettier --check .",
-    "format": "prettier --check --write .",
-    "check-urls": "node test/urls.tests.cjs"
+    "lint": "prettier --check . && lunte",
+    "format": "prettier --write .",
+    "start": "npm run build && electron .",
+    "dev": "concurrently -k \"vite --port 5173 --strictPort\" \"wait-on tcp:5173 && PEAR_DEV_SERVER_URL=http://localhost:5173 electron .\"",
+    "build": "vite build"
   },
-  "pear": {
-    "pre": "pear-electron/pre",
-    "routes": ".",
-    "stage": {
-      "ignore": [
-        ".git",
-        ".gitattributes",
-        ".gitignore",
-        ".github",
-        ".DS_Store",
-        ".prettierignore",
-        "prebuilds",
-        "coverage",
-        ".vscode",
-        "corestore",
-        "test",
-        "examples",
-        "todo",
-        "scripts",
-        "sidecar.crash.log",
-        "electron-main.crash.log",
-        "cli.crash.log",
-        "package-lock.json",
-        "node_modules/.package-lock.json"
-      ]
-    },
-    "gui": {
-      "backgroundColor": "#151517",
-      "height": 780,
-      "width": 1120
-    }
+  "build": {
+    "appId": "to.holepunch.PearUi",
+    "productName": "Pear"
   },
   "dependencies": {
-    "b4a": "^1.6.4",
-    "bare-path": "^2.1.0",
-    "bare-which": "^2.0.0",
-    "bufferutil": "^4.0.9",
-    "pear-bridge": "^1.2.0",
-    "pear-dump": "^1.0.0",
-    "pear-electron": "^1.7.20",
-    "pear-inspect": "^1.0.3",
-    "pear-opwait": "^1.0.0",
-    "redhat-overpass-font": "^1.0.0",
-    "utf-8-validate": "^6.0.5",
-    "ws": "^8.16.0"
+    "pear-container": "^0.1.0",
+    "pear-runtime": "^0.1.0"
   },
   "devDependencies": {
-    "brittle": "^3.4.0",
-    "prettier": "^3.6.2",
-    "prettier-config-holepunch": "^2.0.0"
+    "@vitejs/plugin-react": "^5.1.4",
+    "brittle": "^3.19.1",
+    "concurrently": "^9.2.1",
+    "electron": "^40.2.1",
+    "esbuild": "^0.27.3",
+    "prettier": "^3.8.1",
+    "prettier-config-holepunch": "^2.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "vite": "^7.3.1",
+    "wait-on": "^9.0.3"
   },
   "license": "Apache-2.0",
   "description": "> The Pear Runtime Pear Desktop Application",
-  "directories": {
-    "example": "examples",
-    "lib": "lib",
-    "test": "tests"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/holepunchto/pear-desktop.git"
