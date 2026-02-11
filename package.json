@@ -10,7 +10,7 @@
     "dev": "concurrently -k \"vite --port 5173 --strictPort\" \"wait-on tcp:5173 && PEAR_DEV_SERVER_URL=http://localhost:5173 electron .\"",
     "build": "vite build",
     "make": "npm run build && electron-forge make --platform=darwin",
-    "stage": "npm run make && APP_DIR=$(ls -d out/pear-desktop-darwin-* | head -n 1) && cp pear.json \"$APP_DIR\" && (cd \"$APP_DIR\" && pear stage main)",
+    "stage": "npm run make && APP_DIR=$(ls -d out/pear-desktop-darwin-* | head -n 1) && cp pear.json \"$APP_DIR\" && (cd \"$APP_DIR\" && pear stage pear://$(node -p \"require('./pear.json').key\"))",
     "test": "echo 'missing'"
   },
   "config": {
