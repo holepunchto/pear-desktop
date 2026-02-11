@@ -9,16 +9,19 @@
     "start": "npm run build && electron .",
     "dev": "concurrently -k \"vite --port 5173 --strictPort\" \"wait-on tcp:5173 && PEAR_DEV_SERVER_URL=http://localhost:5173 electron .\"",
     "build": "vite build",
+    "make": "npm run build && electron-forge make --platform=darwin",
+    "stage": "npm run make && APP_DIR=$(ls -d out/pear-desktop-darwin-* | head -n 1) && cp pear.json \"$APP_DIR\" && (cd \"$APP_DIR\" && pear stage main)",
     "test": "echo 'missing'"
   },
-  "build": {
-    "appId": "to.holepunch.PearUi",
-    "productName": "Pear"
+  "config": {
+    "forge": "./forge.config.cjs"
   },
   "dependencies": {
     "pear-runtime": "^0.1.0"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^7.11.1",
+    "@electron-forge/maker-zip": "^7.11.1",
     "@vitejs/plugin-react": "^5.1.4",
     "brittle": "^3.19.1",
     "concurrently": "^9.2.1",

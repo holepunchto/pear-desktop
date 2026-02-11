@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react'
 
 export default function App() {
-  const [text, setText] = useState('VERSION 1')
+  const [version, setVersion] = useState('...')
+  const [status, setStatus] = useState('')
 
   useEffect(() => {
+    window.bridge.getVersion().then((nextVersion) => {
+      setVersion(String(nextVersion))
+    })
+
     const off = window.bridge.onRuntimeEvent((eventName) => {
-      if (eventName === 'updating') setText('VERSION 1: Updating...')
+      if (eventName === 'updating') setStatus('Updating...')
       if (eventName === 'updated') {
         window.bridge.applyUpdate()
-
-        setText('VERSION 1: Updated! Restart for latest')
+        setStatus('Updated! Restart for latest')
       }
     })
 
@@ -27,8 +31,12 @@ export default function App() {
 
   return (
     <>
-      <img src='assets/pears.svg' alt='Pears' />
-      <h1>{text}</h1>
+      <img src='/assets/pears.svg' alt='Pears' />
+      <h1>
+        VERSION {version}
+        {status ? `: ${status}` : ''}
+      </h1>
+      <h2>It's much improved</h2>
     </>
   )
 }
