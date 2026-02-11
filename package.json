@@ -8,7 +8,8 @@
     "format": "prettier --write .",
     "start": "npm run build && electron .",
     "dev": "concurrently -k \"vite --port 5173 --strictPort\" \"wait-on tcp:5173 && PEAR_DEV_SERVER_URL=http://localhost:5173 electron .\"",
-    "build": "vite build"
+    "build": "vite build",
+    "test": "echo 'missing'"
   },
   "build": {
     "appId": "to.holepunch.PearUi",
