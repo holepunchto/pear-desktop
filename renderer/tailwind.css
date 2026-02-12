@@ -1,8 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
-@import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
+@import './shadcn.css';
 
 :root {
   --background: oklch(1 0 0);
