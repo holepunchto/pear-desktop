@@ -9,5 +9,10 @@ export default {
   build: {
     outDir: path.join(__dirname, 'dist')
   },
-  plugins: [react(), tailwindcss()]
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './renderer/src')
+    }
+  }
 }

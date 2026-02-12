@@ -1,14 +1,15 @@
 import pearsSvg from './assets/pears.svg'
-import UpdateNotice from './src/components/update-notice.jsx'
+import UpdateNotice from '@/components/update-notice.jsx'
+import { ThemeProvider } from '@/components/theme-provider.jsx'
 
 export default function App() {
   return (
-    <>
-      <div data-theme='dark' className='flex flex-col items-center justify-center min-h-lvh'>
+    <ThemeProvider>
+      <div className='flex flex-col items-center justify-center min-h-lvh'>
         <img src={pearsSvg} alt='Pears' />
       </div>
       <UpdateNotice />
-    </>
+    </ThemeProvider>
   )
 }
 
