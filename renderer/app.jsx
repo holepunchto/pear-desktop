@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import pearsSvg from './assets/pears.svg'
 
 export default function App() {
   const [config, setConfig] = useState({ version: '...', key: '' })
@@ -30,15 +31,13 @@ export default function App() {
   }, [])
 
   return (
-    <>
-      <img src='/assets/pears.svg' alt='Pears' />
+    <div data-theme='dark' className='flex flex-col items-center justify-center min-h-lvh'>
+      <img src={pearsSvg} alt='Pears' />
       <h1>
         VERSION {String(config.version)}
         {status ? `: ${status}` : ''}
       </h1>
       <p>KEY {String(config.key || '')}</p>
-      <h2>It's even yet mucher improveder</h2>
-      <h2>TWICE</h2>
-    </>
+    </div>
   )
 }
