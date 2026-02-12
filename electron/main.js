@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, nativeTheme } from 'electron'
 import { createRequire } from 'module'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -40,6 +40,8 @@ function getWorker() {
   })
   return worker
 }
+
+nativeTheme.themeSource = 'dark'
 
 async function createWindow() {
   const win = new BrowserWindow({

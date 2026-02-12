@@ -3,14 +3,22 @@
 @theme {
   --color-fg: #fff;
   --color-bg: #222;
+  --color-border: #555;
 
   --color-brand-pear: color(display-p3 0.690196 0.85098 0.266667 / 1);
 
   --font-system: system-ui;
+  --font-mono: 'SF Mono', monospace;
 }
 
 @layer base {
+  *,
+  *:before,
+  *:after {
+    @apply min-w-0 border-border;
+  }
+
   body {
-    @apply bg-bg text-fg font-system;
+    @apply bg-bg text-fg font-mono dark:antialiased;
   }
 }
