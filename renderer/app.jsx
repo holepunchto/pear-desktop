@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import pearsSvg from './assets/pears.svg'
+import pearSvg from './assets/pear.svg'
 import UpdateNotice from '@/components/update-notice.jsx'
 import { ThemeProvider } from '@/components/theme-provider.jsx'
 import { Badge } from '@/components/ui/badge'
@@ -90,7 +90,9 @@ function RuntimeStatsDashboard() {
       <div className='grid grid-cols-[1fr_minmax(200px,50%)] [--space:--spacing(3)] p-(--space) gap-(--space) md:[--space:--spacing(8)]'>
         <div>
           <div className='prose'>
-            <img src={pearsSvg} />
+            <p className='mb-6'>
+              <img src={pearSvg} />
+            </p>
             <h1 className='uppercase'>Welcome to the internet of peers</h1>
             <p>
               Build <strong>unstoppable, zero-infra P2P applications</strong> for all platforms.
