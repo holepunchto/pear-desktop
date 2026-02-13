@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import './shadcn.css';
+@import './prose.css';
 
 :root {
   --background: oklch(1 0 0);
@@ -121,6 +122,6 @@
     @apply border-border outline-ring/50 min-w-0;
   }
   body {
-    @apply bg-background text-foreground font-mono;
+    @apply bg-background text-foreground font-mono text-sm;
   }
 }
