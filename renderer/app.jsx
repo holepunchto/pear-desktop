@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import pearSvg from './assets/pear.svg'
+import pearSvg from './assets/pear-vector.svg'
 import UpdateNotice from '@/components/update-notice.jsx'
 import { ThemeProvider } from '@/components/theme-provider.jsx'
 import { Badge } from '@/components/ui/badge'
@@ -91,7 +91,7 @@ function RuntimeStatsDashboard() {
         <div>
           <div className='prose'>
             <p className='mb-6'>
-              <img src={pearSvg} />
+              <img src={pearSvg} className='h-16' />
             </p>
             <h1 className='uppercase'>Welcome to the internet of peers</h1>
             <p>
