@@ -75,14 +75,14 @@ function RuntimeStatsDashboard() {
   const headerStatus = useMemo(() => {
     if (loading) return 'Loading runtime stats...'
     if (error) return error
-    return `Polling every ${POLL_INTERVAL_MS / 1000}s`
+    return `Refreshing every ${POLL_INTERVAL_MS / 1000}s`
   }, [loading, error])
 
   return (
     <div className='min-h-lvh'>
       <header className='h-8 flex items-center justify-end px-1.5 mt-px'>
         <Badge className='gap-2' variant='secondary'>
-          <span>Refreshing every 2s</span>
+          <span>{headerStatus}</span>
           <span className='size-2 bg-yellow-300 animate-pulse rounded-full' />
         </Badge>
       </header>
@@ -252,22 +252,3 @@ export default function App() {
     </ThemeProvider>
   )
 }
-
-// const [config, setConfig] = useState({ version: '...', key: '' })
-//
-// useEffect(() => {
-//   window.bridge.getConfig().then((nextConfig) => {
-//     setConfig(nextConfig || { version: '...', key: '' })
-//   })
-//
-//   const offWorkerData = window.bridge.onWorkerData((data) => {
-//     console.log('worker:', data)
-//   })
-//
-//   window.bridge.startWorker()
-//
-//   return () => {
-//     offWorkerData()
-//   }
-// }, [])
-//
