@@ -3,6 +3,7 @@ const { contextBridge, ipcRenderer } = require('electron')
 contextBridge.exposeInMainWorld('bridge', {
   applyUpdate: () => ipcRenderer.invoke('runtime:applyUpdate'),
   getConfig: () => ipcRenderer.invoke('runtime:getConfig'),
+  getStats: () => ipcRenderer.invoke('runtime:getStats'),
   onRuntimeEvent: (callback) => {
     if (typeof callback !== 'function') return () => {}
     const listener = (_event, eventName) => callback(eventName)

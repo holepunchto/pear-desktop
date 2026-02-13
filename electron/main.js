@@ -5,17 +5,113 @@ import { fileURLToPath } from 'url'
 
 const require = createRequire(import.meta.url)
 const PearRuntime = require('pear-runtime')
-const pearConfig = require('../pear.json')
+const pearConfig = require('../package.json')
+const { version, upgrade } = pearConfig
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
 let runtime = null
 let worker = null
 
 function getRuntime() {
   if (runtime) return runtime
-  runtime = new PearRuntime({ app: getAppPath(), ...pearConfig })
+  runtime = new PearRuntime({ app: getAppPath(), version, upgrade })
   return runtime
+}
+
+function normalizeNode(node) {
+  if (!node || typeof node !== 'object') return null
+  const out = {
+    host: node.host ?? null,
+    port: Number.isInteger(node.port) ? node.port : null
+  }
+  if (node.id && Buffer.isBuffer(node.id)) out.id = node.id.toString('hex')
+  return out
+}
+
+async function getPersistedCoreStats(store, limit = 50) {
+  if (!store || typeof store.list !== 'function') {
+    return { count: null, discoveryKeys: [] }
+  }
+
+  const stream = store.list()
+  let count = 0
+  const discoveryKeys = []
+
+  try {
+    for await (const discoveryKey of stream) {
+      count++
+      if (discoveryKeys.length < limit) {
+        discoveryKeys.push(Buffer.from(discoveryKey).toString('hex'))
+      }
+    }
+  } catch (error) {
+    return {
+      count: null,
+      discoveryKeys,
+      error: error?.message || 'Failed to enumerate persisted cores'
+    }
+  } finally {
+    if (stream && typeof stream.destroy === 'function') stream.destroy()
+  }
+
+  return { count, discoveryKeys }
+}
+
+async function getRuntimeStats() {
+  const runtime = getRuntime()
+  if (typeof runtime.ready === 'function') {
+    try {
+      await runtime.ready()
+    } catch {}
+  }
+
+  const swarm = runtime.swarm || null
+  const dht = swarm?.dht || null
+  const store = runtime.store || null
+
+  const loadedCoreDiscoveryKeys = []
+  if (store?.cores && Symbol.iterator in Object(store.cores)) {
+    for (const core of store.cores) {
+      if (loadedCoreDiscoveryKeys.length >= 50) break
+      if (!core?.discoveryKey) continue
+      loadedCoreDiscoveryKeys.push(Buffer.from(core.discoveryKey).toString('hex'))
+    }
+  }
+
+  const persisted = await getPersistedCoreStats(store)
+
+  const bootstrap = Array.isArray(dht?.bootstrapNodes)
+    ? dht.bootstrapNodes.map(normalizeNode).filter(Boolean)
+    : []
+
+  const knownNodes =
+    typeof dht?.toArray === 'function' ? dht.toArray({ limit: 100 }).map(normalizeNode) : []
+
+  return {
+    timestamp: Date.now(),
+    link: runtime.link ?? null,
+    swarm: {
+      connections: swarm?.connections?.size ?? 0,
+      peers: swarm?.peers?.size ?? 0,
+      connecting: swarm?.connecting ?? 0,
+      stats: swarm?.stats ?? null
+    },
+    dht: {
+      bootstrap,
+      knownNodes,
+      stats: dht?.stats ?? null,
+      bootstrapped: typeof dht?.bootstrapped === 'boolean' ? dht.bootstrapped : null
+    },
+    corestore: {
+      loadedCores: typeof store?.cores?.size === 'number' ? store.cores.size : null,
+      loadedCoreDiscoveryKeys,
+      persistedCores: persisted.count,
+      persistedCoreDiscoveryKeys: persisted.discoveryKeys,
+      persistedError: persisted.error ?? null
+    }
+  }
 }
 
 function getAppPath() {
@@ -45,8 +141,8 @@ nativeTheme.themeSource = 'dark'
 
 async function createWindow() {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1140,
+    height: 910,
     titleBarStyle: 'hidden',
     webPreferences: {
       preload: path.join(__dirname, '..', 'electron', 'preload.js'),
@@ -87,6 +183,7 @@ async function createWindow() {
 
 ipcMain.handle('runtime:applyUpdate', () => getRuntime().applyUpdate())
 ipcMain.handle('runtime:getConfig', () => pearConfig)
+ipcMain.handle('runtime:getStats', () => getRuntimeStats())
 ipcMain.handle('runtime:startWorker', () => {
   getWorker()
   return true
