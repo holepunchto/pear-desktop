@@ -74,7 +74,7 @@
 }
 
 @theme inline {
-  --font-mono: 'ibm-plex-embedded', sans-serif;
+  --font-mono: 'ibm-plex-embedded', monospace;
 
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
