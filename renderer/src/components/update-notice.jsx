@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Spinner } from '@/components/ui/spinner'
@@ -25,13 +25,17 @@ export default function UpdateNotice() {
   const [status, setStatus] = useState(State.idle)
 
   useEffect(() => {
-    return window.bridge.onRuntimeEvent((eventName) => {
-      if (eventName === 'updating') setStatus('Updating...')
-      if (eventName === 'updated') {
-        window.bridge.applyUpdate()
-        setStatus('Updated! Restart for latest')
-      }
+    const offUpdating = window.bridge.onPearEvent('updating', () => {
+      setStatus(State.updating)
     })
+    const offUpdated = window.bridge.onPearEvent('updated', () => {
+      setStatus(State.updated)
+    })
+
+    return () => {
+      offUpdating()
+      offUpdated()
+    }
   }, [])
 
   if (status === State.idle) return null
@@ -50,7 +54,7 @@ export default function UpdateNotice() {
     }
     case State.updated: {
       action = (
-        <Button size='xs' variant='default'>
+        <Button size='xs' variant='default' onClick={() => window.bridge.applyUpdate()}>
           Restart
         </Button>
       )

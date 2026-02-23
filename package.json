@@ -1,27 +1,21 @@
 {
   "name": "pear-desktop",
+  "productName": "Pear Desktop",
   "version": "3.0.0",
+  "upgrade": "pear://epw3ys1gxkpotwh4ngxmqac8ywimfhn16kmz6szbd9cihtockrhy",
   "type": "module",
   "main": "electron/main.js",
+  "private": true,
   "scripts": {
     "lint": "prettier --check . && lunte",
     "format": "prettier --write .",
-    "start": "npm run build && electron .",
+    "start": "npm run build && electron-forge start -- --no-updates",
     "dev": "concurrently -k \"vite --port 5173 --strictPort\" \"wait-on tcp:5173 && PEAR_DEV_SERVER_URL=http://localhost:5173 electron .\"",
     "build": "vite build",
     "make": "npm run build && electron-forge make",
+    "package": "npm run build && electron-forge package",
     "stage": "npm run make && APP_DIR=$(ls -d out/pear-desktop-darwin-* | head -n 1) && cp pear.json \"$APP_DIR\" && (cd \"$APP_DIR\" && pear stage pear://$(node -p \"require('./pear.json').key\"))",
     "test": "echo 'missing'"
-  },
-  "config": {
-    "forge": "./forge.config.cjs"
-  },
-  "upgrade": "pear://epw3ys1gxkpotwh4ngxmqac8ywimfhn16kmz6szbd9cihtockrhy",
-  "build": {
-    "appId": "to.holepunch.PearDesktop",
-    "files": [
-      "out"
-    ]
   },
   "dependencies": {
     "pear-runtime": "^0.4.2"

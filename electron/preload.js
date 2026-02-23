@@ -1,21 +1,36 @@
 const { contextBridge, ipcRenderer } = require('electron')
-
 contextBridge.exposeInMainWorld('bridge', {
-  applyUpdate: () => ipcRenderer.invoke('runtime:applyUpdate'),
-  getConfig: () => ipcRenderer.invoke('runtime:getConfig'),
-  getStats: () => ipcRenderer.invoke('runtime:getStats'),
-  onRuntimeEvent: (callback) => {
-    if (typeof callback !== 'function') return () => {}
-    const listener = (_event, eventName) => callback(eventName)
-    ipcRenderer.on('runtime:event', listener)
-    return () => ipcRenderer.removeListener('runtime:event', listener)
+  pkg() {
+    return ipcRenderer.sendSync('pkg')
   },
-
-  startWorker: () => ipcRenderer.invoke('runtime:startWorker'),
-  onWorkerData: (callback) => {
-    if (typeof callback !== 'function') return () => {}
-    const listener = (_event, data) => callback(data)
-    ipcRenderer.on('worker:data', listener)
-    return () => ipcRenderer.removeListener('worker:data', listener)
+  applyUpdate: () => ipcRenderer.invoke('pear:applyUpdate'),
+  onPearEvent: (name, listener) => {
+    const wrap = (evt, eventName) => listener(eventName)
+    ipcRenderer.on('pear:event:' + name, wrap)
+    return () => ipcRenderer.removeListener('pear:event:' + name, wrap)
+  },
+  startWorker: (specifier) => ipcRenderer.invoke('pear:startWorker', specifier),
+  onWorkerStdout: (specifier, listener) => {
+    const wrap = (evt, data) => listener(Buffer.from(data))
+    ipcRenderer.on('pear:worker:stdout:' + specifier, wrap)
+    return () => ipcRenderer.removeListener('pear:worker:stdout:' + specifier, wrap)
+  },
+  onWorkerStderr: (specifier, listener) => {
+    const wrap = (evt, data) => listener(Buffer.from(data))
+    ipcRenderer.on('pear:worker:stderr:' + specifier, wrap)
+    return () => ipcRenderer.removeListener('pear:worker:stderr:' + specifier, wrap)
+  },
+  onWorkerIPC: (specifier, listener) => {
+    const wrap = (evt, data) => listener(Buffer.from(data))
+    ipcRenderer.on('pear:worker:ipc:' + specifier, wrap)
+    return () => ipcRenderer.removeListener('pear:worker:ipc:' + specifier, wrap)
+  },
+  onWorkerExit: (specifier, listener) => {
+    const wrap = (evt, data) => listener(Buffer.from(data))
+    ipcRenderer.on('pear:worker:exit:' + specifier, wrap)
+    return () => ipcRenderer.removeListener('pear:worker:exit:' + specifier, wrap)
+  },
+  writeWorkerIPC: (specifier, data) => {
+    return ipcRenderer.invoke('pear:worker:writeIPC:' + specifier, data)
   }
 })

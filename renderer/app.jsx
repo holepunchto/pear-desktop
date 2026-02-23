@@ -4,7 +4,7 @@ import UpdateNotice from '@/components/update-notice.jsx'
 import { ThemeProvider } from '@/components/theme-provider.jsx'
 import { Badge } from '@/components/ui/badge'
 
-const POLL_INTERVAL_MS = 2000
+const WORKER_SPECIFIER = '/worker/main.js'
 
 function formatNode(node) {
   if (!node || !node.host || !node.port) return 'unknown'
@@ -36,28 +36,57 @@ function RuntimeStatsDashboard() {
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [lastUpdatedAt, setLastUpdatedAt] = useState(null)
 
   useEffect(() => {
     let mounted = true
+    let buffer = ''
+    const decoder = new TextDecoder('utf-8')
 
-    const fetchStats = async () => {
-      try {
-        const nextStats = await window.bridge.getStats()
-        if (!mounted) return
-        setStats(nextStats)
+    const onMessage = (message) => {
+      if (!mounted || !message || typeof message !== 'object') return
+      if (message.type === 'runtime:stats' && message.stats) {
+        setStats(message.stats)
         setLoading(false)
         setError('')
-      } catch (err) {
-        if (!mounted) return
+        setLastUpdatedAt(Date.now())
+      }
+      if (message.type === 'runtime:stats:error') {
         setLoading(false)
-        setError(err?.message || 'Failed to fetch stats')
+        setError(message.error || 'Failed to fetch stats')
       }
     }
-    fetchStats()
-    const timer = setInterval(fetchStats, POLL_INTERVAL_MS)
+
+    const offWorkerIPC = window.bridge.onWorkerIPC(WORKER_SPECIFIER, (data) => {
+      buffer += decoder.decode(data, { stream: true })
+      let boundary = buffer.indexOf('\n')
+      while (boundary !== -1) {
+        const line = buffer.slice(0, boundary).trim()
+        buffer = buffer.slice(boundary + 1)
+        boundary = buffer.indexOf('\n')
+        if (!line) continue
+        try {
+          onMessage(JSON.parse(line))
+        } catch {}
+      }
+    })
+
+    const offWorkerExit = window.bridge.onWorkerExit(WORKER_SPECIFIER, () => {
+      if (!mounted) return
+      setLoading(false)
+      setError('Stats worker exited')
+    })
+
+    window.bridge.startWorker(WORKER_SPECIFIER).catch((err) => {
+      if (!mounted) return
+      setLoading(false)
+      setError(err?.message || 'Failed to start stats worker')
+    })
+
     return () => {
       mounted = false
-      clearInterval(timer)
+      offWorkerIPC()
+      offWorkerExit()
     }
   }, [])
 
@@ -75,8 +104,9 @@ function RuntimeStatsDashboard() {
   const headerStatus = useMemo(() => {
     if (loading) return 'Loading runtime stats...'
     if (error) return error
-    return `Refreshing every ${POLL_INTERVAL_MS / 1000}s`
-  }, [loading, error])
+    if (!lastUpdatedAt) return 'Connected'
+    return `Last update ${new Date(lastUpdatedAt).toLocaleTimeString()}`
+  }, [loading, error, lastUpdatedAt])
 
   return (
     <div className='min-h-lvh'>
