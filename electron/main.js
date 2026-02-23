@@ -244,12 +244,16 @@ function getWorker(specifier) {
   ipcMain.handle('pear:worker:writeIPC:' + specifier, (evt, data) => {
     return worker.write(Buffer.from(data))
   })
+  const onBeforeQuit = () => {
+    if (!worker.destroyed) worker.destroy()
+  }
   workers.set(specifier, worker)
   worker.on('data', sendWorkerIPC)
   worker.stdout.on('data', sendWorkerStdout)
   worker.stderr.on('data', sendWorkerStderr)
   worker.once('exit', (code) => {
     clearStatsTimer()
+    app.removeListener('before-quit', onBeforeQuit)
     ipcMain.removeHandler('pear:worker:writeIPC:' + specifier)
     worker.removeListener('data', sendWorkerIPC)
     worker.stdout.removeListener('data', sendWorkerStdout)
@@ -257,9 +261,7 @@ function getWorker(specifier) {
     sendToAll('pear:worker:exit:' + specifier, code)
     workers.delete(specifier)
   })
-  app.on('before-quit', () => {
-    worker.kill()
-  })
+  app.on('before-quit', onBeforeQuit)
   return worker
 }
 
@@ -304,7 +306,7 @@ async function createWindow() {
     return
   }
 
-  await win.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'))
+  await win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'))
 }
 
 ipcMain.handle('pear:applyUpdate', () => getPear().applyUpdate())

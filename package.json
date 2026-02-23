@@ -14,16 +14,22 @@
     "build": "vite build",
     "make": "npm run build && electron-forge make",
     "package": "npm run build && electron-forge package",
-    "stage": "npm run make && APP_DIR=$(ls -d out/pear-desktop-darwin-* | head -n 1) && cp pear.json \"$APP_DIR\" && (cd \"$APP_DIR\" && pear stage pear://$(node -p \"require('./pear.json').key\"))",
+    "stage": "npm run package && STAGE_LINK=$(node -p \"require('./package.json').upgrade\") && APP_DIR=$(ls -d out/Pear\\ Desktop-darwin-* | head -n 1) && (cd \"$APP_DIR\" && pear stage \"$STAGE_LINK\")",
     "test": "echo 'missing'"
   },
   "dependencies": {
-    "pear-runtime": "^0.4.2"
+    "paparam": "^1.10.0",
+    "pear-runtime": "^0.4.2",
+    "which-runtime": "^1.3.2"
   },
   "devDependencies": {
     "@base-ui/react": "^1.2.0",
     "@electron-forge/cli": "^7.11.1",
+    "@electron-forge/maker-deb": "^7.11.1",
+    "@electron-forge/maker-dmg": "^7.11.1",
+    "@electron-forge/maker-rpm": "^7.11.1",
     "@electron-forge/maker-zip": "^7.11.1",
+    "@forkprince/electron-forge-maker-appimage": "^1.0.11",
     "@tailwindcss/vite": "^4.2.1",
     "@vitejs/plugin-react": "^5.1.4",
     "brittle": "^3.19.1",
@@ -31,6 +37,8 @@
     "clsx": "^2.1.1",
     "concurrently": "^9.2.1",
     "electron": "^40.6.0",
+    "electron-forge-plugin-prune-prebuilds": "^1.0.0",
+    "electron-forge-plugin-universal-prebuilds": "^1.0.0",
     "esbuild": "^0.27.3",
     "lucide-react": "^0.575.0",
     "lunte": "^1.6.0",
