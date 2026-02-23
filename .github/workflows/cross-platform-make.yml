@@ -1,0 +1,42 @@
+name: Cross-Platform Make
+
+on:
+  workflow_dispatch:
+
+jobs:
+  make:
+    name: Make / ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: macos-latest
+            platform: darwin
+          - os: windows-latest
+            platform: win32
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build renderer
+        run: npm run build
+
+      - name: Package app
+        run: npx electron-forge make --platform=${{ matrix.platform }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pear-desktop-${{ matrix.platform }}
+          path: out/make/**/*
+          if-no-files-found: error
