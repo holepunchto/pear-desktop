@@ -35,9 +35,10 @@ jobs:
       - name: Package app
         run: npx electron-forge make --platform=${{ matrix.platform }}
 
-      - name: Upload artifacts
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: pear-desktop-${{ matrix.platform }}
-          path: out/make/**/*
+          name: pear-desktop-${{ matrix.platform }}-build
+          path: out/make
           if-no-files-found: error
+          retention-days: 7

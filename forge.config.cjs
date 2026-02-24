@@ -32,6 +32,10 @@ module.exports = {
     {
       name: '@forkprince/electron-forge-maker-appimage',
       platforms: ['linux']
+    },
+    {
+      name: '@electron-forge/maker-zip',
+      platforms: ['win32']
     }
   ],
 
