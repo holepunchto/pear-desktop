@@ -1,6 +1,7 @@
 name: Cross-Platform Make
 
 on:
+  push:
   workflow_dispatch:
 
 jobs:
