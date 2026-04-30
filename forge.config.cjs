@@ -6,36 +6,37 @@ let packagerConfig = {
   protocols: [{ name: appName, schemes: [pkg.name] }]
 }
 
+const macNotaryProfile = process.env.MAC_NOTARY_PROFILE || process.env.MAC_NOTARY_KEYCHAIN_PROFILE
+const macNotaryKeychain = process.env.MAC_NOTARY_KEYCHAIN
+const osxNotarize = macNotaryProfile
+  ? {
+      keychainProfile: macNotaryProfile,
+      ...(macNotaryKeychain ? { keychain: macNotaryKeychain } : {})
+    }
+  : {
+      appleId: process.env.APPLE_ID,
+      appleIdPassword: process.env.APPLE_PASSWORD,
+      teamId: process.env.TEAM_ID
+    }
+
 if (process.env.MAC_CODESIGN_IDENTITY) {
   packagerConfig = {
     ...packagerConfig,
     osxSign: {
       identity: process.env.MAC_CODESIGN_IDENTITY
     },
-    osxNotarize: {
-      appleId: process.env.APPLE_ID,
-      appleIdPassword: process.env.APPLE_PASSWORD,
-      teamId: process.env.TEAM_ID
-    }
+    osxNotarize
   }
 }
-
-const macMaker = process.env.CI
-  ? {
-      name: '@electron-forge/maker-zip',
-      platforms: ['darwin']
-    }
-  : {
-      name: '@electron-forge/maker-dmg',
-      platforms: ['darwin'],
-      config: {}
-    }
 
 module.exports = {
   packagerConfig,
 
   makers: [
-    macMaker,
+    {
+      name: '@electron-forge/maker-zip',
+      platforms: ['darwin']
+    },
     {
       name: '@forkprince/electron-forge-maker-appimage',
       platforms: ['linux'],
