@@ -35,7 +35,7 @@
     "bare-fs": "^4.7.1",
     "bare-path": "^3.0.0",
     "bare-url": "^2.4.2",
-    "pear-runtime-electron": "https+git://github.com/mikker/pear-runtime-electron.git"
+    "pear-runtime-electron": "git+https://github.com/mikker/pear-runtime-electron.git"
   },
   "devDependencies": {
     "@base-ui/react": "^1.4.1",
