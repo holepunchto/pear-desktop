@@ -18,6 +18,7 @@ const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url),
 const { name, productName, version, upgrade } = pkg
 
 const protocol = name
+const appIcon = path.join(__dirname, '..', 'Icon.png')
 
 const { storage: pearStore, updates } = parseLaunchArgs(process.argv, {
   isPackaged: app.isPackaged
@@ -248,6 +249,7 @@ async function createWindow() {
     width: 1140,
     height: 910,
     titleBarStyle: 'hidden',
+    icon: appIcon,
     webPreferences: {
       preload: path.join(__dirname, '..', 'electron', 'preload.js'),
       sandbox: true,
@@ -301,6 +303,8 @@ if (!lock) {
   })
 
   app.whenReady().then(() => {
+    if (process.platform === 'darwin') app.dock.setIcon(appIcon)
+
     createWindow().catch((err) => {
       console.error('Failed to create window:', err)
       app.quit()

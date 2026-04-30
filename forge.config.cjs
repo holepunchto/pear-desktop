@@ -2,7 +2,7 @@ const pkg = require('./package.json')
 const appName = pkg.productName ?? pkg.name
 
 let packagerConfig = {
-  icon: 'build/icon',
+  icon: 'Icon',
   protocols: [{ name: appName, schemes: [pkg.name] }]
 }
 
@@ -31,7 +31,10 @@ module.exports = {
     },
     {
       name: '@forkprince/electron-forge-maker-appimage',
-      platforms: ['linux']
+      platforms: ['linux'],
+      config: {
+        icons: [{ file: 'Icon.png', size: 1024 }]
+      }
     },
     {
       name: '@electron-forge/maker-zip',
