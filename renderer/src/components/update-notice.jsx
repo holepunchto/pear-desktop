@@ -54,7 +54,11 @@ export default function UpdateNotice() {
     }
     case State.updated: {
       action = (
-        <Button size='xs' variant='default' onClick={() => window.bridge.applyUpdate()}>
+        <Button
+          size='xs'
+          variant='default'
+          onClick={() => window.bridge.applyUpdate().then(() => window.bridge.appAfterUpdate())}
+        >
           Restart
         </Button>
       )

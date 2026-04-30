@@ -1,11 +1,15 @@
 import { app, BrowserWindow, ipcMain, nativeTheme } from 'electron'
-import os from 'node:os'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { readFileSync } from 'node:fs'
-import PearRuntime from 'pear-runtime'
-import { isMac, isLinux } from 'which-runtime'
-import { command, flag } from 'paparam'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { readFileSync } from 'fs'
+import { parseLaunchArgs } from './launch-args.js'
+import {
+  bindPearUpdaterToWindow,
+  createMainWorkerBridge,
+  createPearRuntimeManager,
+  getPackagedAppPath,
+  registerPearUpdateHandlers
+} from 'pear-runtime-electron'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -15,57 +19,29 @@ const { name, productName, version, upgrade } = pkg
 
 const protocol = name
 
-const workers = new Map()
-let pear = null
+const { storage: pearStore, updates } = parseLaunchArgs(process.argv, {
+  isPackaged: app.isPackaged
+})
 
-const appName = productName ?? name
-
-const cmd = command(
-  appName,
-  flag('--storage', 'pass custom storage to pear-runtime'),
-  flag('--no-updates', 'start without OTA updates')
-)
-
-cmd.parse(app.isPackaged ? process.argv.slice(1) : process.argv.slice(2))
-
-const pearStore = cmd.flags.storage
-const updates = cmd.flags.updates
+if (pearStore) app.setPath('userData', pearStore)
 
 ipcMain.on('pkg', (evt) => {
   evt.returnValue = pkg
 })
 
-function getPear() {
-  if (pear) return pear
-  const appPath = getAppPath()
-  let dir = null
-  if (pearStore) {
-    console.log('pear store: ' + pearStore)
-    dir = pearStore
-  } else if (appPath === null) {
-    dir = path.join(os.tmpdir(), 'pear', appName)
-  } else {
-    dir = isMac
-      ? path.join(os.homedir(), 'Library', 'Application Support', appName)
-      : isLinux
-        ? path.join(os.homedir(), '.config', appName)
-        : path.join(os.homedir(), 'AppData', 'Roaming', appName)
-  }
-  pear = new PearRuntime({ dir, app: appPath, updates, version, upgrade })
-  return pear
-}
-
-function getAppPath() {
-  if (!app.isPackaged) return null
-  if (isLinux && process.env.APPIMAGE) return process.env.APPIMAGE
-  return path.join(process.resourcesPath, '..', '..')
-}
-
-function sendToAll(name, data) {
-  for (const win of BrowserWindow.getAllWindows()) {
-    if (!win.isDestroyed()) win.webContents.send(name, data)
-  }
-}
+const pearManager = createPearRuntimeManager({
+  name,
+  productName,
+  version,
+  upgrade,
+  storage: pearStore,
+  updates,
+  appPath: getPackagedAppPath({
+    isPackaged: app.isPackaged,
+    resourcesPath: process.resourcesPath,
+    execPath: process.execPath
+  })
+})
 
 function normalizeNode(node) {
   if (!node || typeof node !== 'object') return null
@@ -107,16 +83,16 @@ async function getPersistedCoreStats(store, limit = 50) {
 }
 
 async function getRuntimeStats() {
-  const runtime = getPear()
+  const runtime = pearManager.getPear()
   if (typeof runtime.ready === 'function') {
     try {
       await runtime.ready()
     } catch {}
   }
 
-  const swarm = runtime.swarm || null
+  const swarm = pearManager.swarm || runtime.swarm || null
   const dht = swarm?.dht || null
-  const store = runtime.store || null
+  const store = pearManager.store || runtime.store || null
 
   const loadedCoreDiscoveryKeys = []
   if (store?.cores && Symbol.iterator in Object(store.cores)) {
@@ -161,10 +137,13 @@ async function getRuntimeStats() {
   }
 }
 
-function getWorker(specifier) {
-  if (workers.has(specifier)) return workers.get(specifier)
-  const pear = getPear()
-  const worker = pear.run(path.resolve(__dirname, '..' + specifier), [pear.storage])
+const workerControls = new Map()
+let workerBridge = null
+
+function getWorkerControl(specifier) {
+  let control = workerControls.get(specifier)
+  if (control) return control
+
   let commandBuffer = ''
   let statsTimer = null
   let statsInFlight = false
@@ -181,8 +160,10 @@ function getWorker(specifier) {
     statsInFlight = true
     try {
       const stats = await getRuntimeStats()
+      const worker = workerBridge.getWorker(specifier)
       worker.write(Buffer.from(JSON.stringify({ type: 'runtime:stats', stats }) + '\n'))
     } catch (error) {
+      const worker = workerBridge.getWorker(specifier)
       worker.write(
         Buffer.from(
           JSON.stringify({
@@ -217,7 +198,7 @@ function getWorker(specifier) {
     }
   }
 
-  function parseWorkerControlMessages(data) {
+  function parse(data) {
     commandBuffer += data.toString()
     let boundary = commandBuffer.indexOf('\n')
     while (boundary !== -1) {
@@ -231,39 +212,34 @@ function getWorker(specifier) {
     }
   }
 
-  function sendWorkerStdout(data) {
-    sendToAll('pear:worker:stdout:' + specifier, data)
-  }
-  function sendWorkerStderr(data) {
-    sendToAll('pear:worker:stderr:' + specifier, data)
-  }
-  function sendWorkerIPC(data) {
-    parseWorkerControlMessages(data)
-    sendToAll('pear:worker:ipc:' + specifier, data)
-  }
-  ipcMain.handle('pear:worker:writeIPC:' + specifier, (evt, data) => {
-    return worker.write(Buffer.from(data))
-  })
-  const onBeforeQuit = () => {
-    if (!worker.destroyed) worker.destroy()
-  }
-  workers.set(specifier, worker)
-  worker.on('data', sendWorkerIPC)
-  worker.stdout.on('data', sendWorkerStdout)
-  worker.stderr.on('data', sendWorkerStderr)
-  worker.once('exit', (code) => {
-    clearStatsTimer()
-    app.removeListener('before-quit', onBeforeQuit)
-    ipcMain.removeHandler('pear:worker:writeIPC:' + specifier)
-    worker.removeListener('data', sendWorkerIPC)
-    worker.stdout.removeListener('data', sendWorkerStdout)
-    worker.stderr.removeListener('data', sendWorkerStderr)
-    sendToAll('pear:worker:exit:' + specifier, code)
-    workers.delete(specifier)
-  })
-  app.on('before-quit', onBeforeQuit)
-  return worker
+  control = { parse, destroy: clearStatsTimer }
+  workerControls.set(specifier, control)
+  return control
 }
+
+workerBridge = createMainWorkerBridge({
+  ipcMain,
+  app,
+  getWindows: () => BrowserWindow.getAllWindows(),
+  getPear: pearManager.getPear,
+  resolveWorker: (specifier) => path.resolve(__dirname, '..' + specifier),
+  onWorkerIPC(specifier, data) {
+    getWorkerControl(specifier).parse(data)
+  },
+  onWorkerExit(specifier) {
+    const control = workerControls.get(specifier)
+    if (control) control.destroy()
+    workerControls.delete(specifier)
+  }
+})
+
+workerBridge.register()
+registerPearUpdateHandlers({ ipcMain, app, getPear: pearManager.getPear })
+
+app.once('before-quit', () => {
+  workerBridge.dispose()
+  pearManager.close()
+})
 
 nativeTheme.themeSource = 'dark'
 
@@ -280,23 +256,7 @@ async function createWindow() {
     }
   })
 
-  const pear = getPear()
-
-  const onUpdating = () => {
-    if (!win.isDestroyed()) win.webContents.send('pear:event:updating')
-  }
-
-  const onUpdated = () => {
-    if (!win.isDestroyed()) win.webContents.send('pear:event:updated')
-  }
-
-  pear.on('updating', onUpdating)
-  pear.on('updated', onUpdated)
-
-  win.on('closed', () => {
-    pear.removeListener('updating', onUpdating)
-    pear.removeListener('updated', onUpdated)
-  })
+  bindPearUpdaterToWindow({ getPear: pearManager.getPear, window: win })
 
   const devServerUrl = process.env.PEAR_DEV_SERVER_URL
 
@@ -308,12 +268,6 @@ async function createWindow() {
 
   await win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'))
 }
-
-ipcMain.handle('pear:applyUpdate', () => getPear().applyUpdate())
-ipcMain.handle('pear:startWorker', (evt, filename) => {
-  getWorker(filename)
-  return true
-})
 
 function handleDeepLink(url) {
   console.log('deep link:', url)

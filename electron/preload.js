@@ -1,36 +1,59 @@
 const { contextBridge, ipcRenderer } = require('electron')
+
+function normalizeSpecifier(specifier) {
+  if (typeof specifier !== 'string' || specifier.length === 0) {
+    throw new Error('Worker specifier must be a non-empty string')
+  }
+  return specifier.startsWith('/') ? specifier : '/' + specifier
+}
+
+function toBinary(data) {
+  if (data instanceof Uint8Array) return data
+  if (data instanceof ArrayBuffer) return new Uint8Array(data)
+  if (ArrayBuffer.isView(data)) return new Uint8Array(data.buffer, data.byteOffset, data.byteLength)
+  if (typeof data === 'string') return new TextEncoder().encode(data)
+  return new Uint8Array(0)
+}
+
+function listen(channel, listener) {
+  const wrap = (evt, value) => listener(value)
+  ipcRenderer.on(channel, wrap)
+  return () => ipcRenderer.removeListener(channel, wrap)
+}
+
+function workerChannel(event, specifier) {
+  return `pear:worker:${event}:${normalizeSpecifier(specifier)}`
+}
+
 contextBridge.exposeInMainWorld('bridge', {
   pkg() {
     return ipcRenderer.sendSync('pkg')
   },
-  applyUpdate: () => ipcRenderer.invoke('pear:applyUpdate'),
-  onPearEvent: (name, listener) => {
-    const wrap = (evt, eventName) => listener(eventName)
-    ipcRenderer.on('pear:event:' + name, wrap)
-    return () => ipcRenderer.removeListener('pear:event:' + name, wrap)
+  applyUpdate() {
+    return ipcRenderer.invoke('pear:applyUpdate')
   },
-  startWorker: (specifier) => ipcRenderer.invoke('pear:startWorker', specifier),
-  onWorkerStdout: (specifier, listener) => {
-    const wrap = (evt, data) => listener(Buffer.from(data))
-    ipcRenderer.on('pear:worker:stdout:' + specifier, wrap)
-    return () => ipcRenderer.removeListener('pear:worker:stdout:' + specifier, wrap)
+  appAfterUpdate() {
+    return ipcRenderer.invoke('app:afterUpdate')
   },
-  onWorkerStderr: (specifier, listener) => {
-    const wrap = (evt, data) => listener(Buffer.from(data))
-    ipcRenderer.on('pear:worker:stderr:' + specifier, wrap)
-    return () => ipcRenderer.removeListener('pear:worker:stderr:' + specifier, wrap)
+  onPearEvent(name, listener) {
+    return listen(`pear:event:${name}`, (value) => listener(value ?? name))
   },
-  onWorkerIPC: (specifier, listener) => {
-    const wrap = (evt, data) => listener(Buffer.from(data))
-    ipcRenderer.on('pear:worker:ipc:' + specifier, wrap)
-    return () => ipcRenderer.removeListener('pear:worker:ipc:' + specifier, wrap)
+  startWorker(specifier) {
+    return ipcRenderer.invoke('pear:startWorker', normalizeSpecifier(specifier))
   },
-  onWorkerExit: (specifier, listener) => {
-    const wrap = (evt, data) => listener(Buffer.from(data))
-    ipcRenderer.on('pear:worker:exit:' + specifier, wrap)
-    return () => ipcRenderer.removeListener('pear:worker:exit:' + specifier, wrap)
+  onWorkerStdout(specifier, listener) {
+    return listen(workerChannel('stdout', specifier), (data) => listener(toBinary(data)))
   },
-  writeWorkerIPC: (specifier, data) => {
-    return ipcRenderer.invoke('pear:worker:writeIPC:' + specifier, data)
+  onWorkerStderr(specifier, listener) {
+    return listen(workerChannel('stderr', specifier), (data) => listener(toBinary(data)))
+  },
+  onWorkerIPC(specifier, listener) {
+    return listen(workerChannel('ipc', specifier), (data) => listener(toBinary(data)))
+  },
+  onWorkerExit(specifier, listener) {
+    return listen(workerChannel('exit', specifier), listener)
+  },
+  writeWorkerIPC(specifier, data) {
+    return ipcRenderer.invoke(workerChannel('writeIPC', specifier), toBinary(data))
   }
 })
