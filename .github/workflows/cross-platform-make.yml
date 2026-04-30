@@ -1,0 +1,38 @@
+name: Cross-Platform Make
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  make:
+    name: Make / ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: macos-latest
+            platform: darwin
+          - os: windows-latest
+            platform: win32
+    steps:
+      - uses: holepunchto/actions/node-base@v1
+        with:
+          allow-git: all
+
+      - name: Build renderer
+        run: npm run build
+
+      - name: Package app
+        run: npx electron-forge make --platform=${{ matrix.platform }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pear-desktop-${{ matrix.platform }}-build
+          path: out/make
+          if-no-files-found: error
+          retention-days: 7

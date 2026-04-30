@@ -1,21 +1,15 @@
 # Pear Desktop
 
-> The Pear Runtime Pear Desktop Application
+![Pear Desktop](docs/screenshot.png)
 
-Pear Desktop is the [pear://runtime](pear://runtime) Application.
-
-## Usage
-
-```
-pear run pear://runtime
-```
+Pear Desktop gives you a brief introspective view into how Pear Runtime is interacting with your system.
 
 ## Development
 
 ```
 git clone https://github.com/holepunchto/pear-desktop
 cd pear-desktop
-pear run --dev .
+npm run dev
 ```
 
 ## License

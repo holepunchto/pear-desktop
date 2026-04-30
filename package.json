@@ -1,70 +1,74 @@
 {
   "name": "pear-desktop",
-  "version": "2.0.0",
+  "productName": "Pear Desktop",
+  "version": "3.0.0",
+  "upgrade": "pear://epw3ys1gxkpotwh4ngxmqac8ywimfhn16kmz6szbd9cihtockrhy",
   "type": "module",
-  "scripts": {
-    "test": "prettier --check .",
-    "format": "prettier --check --write .",
-    "check-urls": "node test/urls.tests.cjs"
-  },
-  "pear": {
-    "pre": "pear-electron/pre",
-    "routes": ".",
-    "stage": {
-      "ignore": [
-        ".git",
-        ".gitattributes",
-        ".gitignore",
-        ".github",
-        ".DS_Store",
-        ".prettierignore",
-        "prebuilds",
-        "coverage",
-        ".vscode",
-        "corestore",
-        "test",
-        "examples",
-        "todo",
-        "scripts",
-        "sidecar.crash.log",
-        "electron-main.crash.log",
-        "cli.crash.log",
-        "package-lock.json",
-        "node_modules/.package-lock.json"
-      ]
+  "imports": {
+    "fs": {
+      "bare": "bare-fs",
+      "default": "fs"
     },
-    "gui": {
-      "backgroundColor": "#151517",
-      "height": 780,
-      "width": 1120
+    "path": {
+      "bare": "bare-path",
+      "default": "path"
+    },
+    "url": {
+      "bare": "bare-url",
+      "default": "url"
     }
   },
+  "main": "electron/main.js",
+  "private": true,
+  "scripts": {
+    "lint": "prettier --check . && lunte",
+    "format": "prettier --write .",
+    "start": "npm run build && electron-forge start -- --no-updates",
+    "dev": "concurrently -k \"vite --port 5173 --strictPort\" \"wait-on tcp:5173 && PEAR_DEV_SERVER_URL=http://localhost:5173 electron .\"",
+    "build": "vite build",
+    "make": "npm run build && electron-forge make",
+    "package": "npm run build && electron-forge package",
+    "stage": "npm run package && STAGE_LINK=$(node -p \"require('./package.json').upgrade\") && APP_DIR=$(ls -d out/Pear\\ Desktop-darwin-* | head -n 1) && (cd \"$APP_DIR\" && pear stage \"$STAGE_LINK\")",
+    "test": "brittle tests/*.test.js"
+  },
   "dependencies": {
-    "b4a": "^1.6.4",
-    "bare-path": "^2.1.0",
-    "bare-which": "^2.0.0",
-    "bufferutil": "^4.0.9",
-    "pear-bridge": "^1.2.0",
-    "pear-dump": "^1.0.0",
-    "pear-electron": "^1.7.20",
-    "pear-inspect": "^1.0.3",
-    "pear-opwait": "^1.0.0",
-    "redhat-overpass-font": "^1.0.0",
-    "utf-8-validate": "^6.0.5",
-    "ws": "^8.16.0"
+    "bare-fs": "^4.7.1",
+    "bare-path": "^3.0.0",
+    "bare-url": "^2.4.2",
+    "pear-runtime-electron": "git+https://github.com/mikker/pear-runtime-electron.git"
   },
   "devDependencies": {
-    "brittle": "^3.4.0",
-    "prettier": "^3.6.2",
-    "prettier-config-holepunch": "^2.0.0"
+    "@base-ui/react": "^1.4.1",
+    "@electron-forge/cli": "^7.11.1",
+    "@electron-forge/maker-deb": "^7.11.1",
+    "@electron-forge/maker-dmg": "^7.11.1",
+    "@electron-forge/maker-rpm": "^7.11.1",
+    "@electron-forge/maker-zip": "^7.11.1",
+    "@forkprince/electron-forge-maker-appimage": "^1.0.11",
+    "@tailwindcss/vite": "^4.2.4",
+    "@vitejs/plugin-react": "^6.0.1",
+    "brittle": "^3.19.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "concurrently": "^9.2.1",
+    "electron": "^41.3.0",
+    "electron-forge-plugin-prune-prebuilds": "^1.0.1",
+    "electron-forge-plugin-universal-prebuilds": "^1.0.0",
+    "esbuild": "^0.28.0",
+    "lucide-react": "^1.14.0",
+    "lunte": "^1.8.0",
+    "prettier": "^3.8.3",
+    "prettier-config-holepunch": "^2.0.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^4.2.4",
+    "tw-animate-css": "^1.4.0",
+    "vite": "^8.0.10",
+    "wait-on": "^9.0.5"
   },
   "license": "Apache-2.0",
   "description": "> The Pear Runtime Pear Desktop Application",
-  "directories": {
-    "example": "examples",
-    "lib": "lib",
-    "test": "tests"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/holepunchto/pear-desktop.git"
@@ -74,5 +78,8 @@
   "bugs": {
     "url": "https://github.com/holepunchto/pear-desktop/issues"
   },
-  "homepage": "https://github.com/holepunchto/pear-desktop#readme"
+  "homepage": "https://github.com/holepunchto/pear-desktop#readme",
+  "overrides": {
+    "@electron/node-gyp": "10.2.0-electron.1"
+  }
 }
