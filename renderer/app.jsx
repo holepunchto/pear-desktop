@@ -67,7 +67,7 @@ function RuntimeStatsDashboard() {
         if (!line) continue
         try {
           onMessage(JSON.parse(line))
-        } catch { }
+        } catch {}
       }
     })
 
@@ -129,7 +129,11 @@ function RuntimeStatsDashboard() {
             </p>
             <p>
               Pear is the developer tooling + p2p distribution and runtime. Pear apps run on{' '}
-              <a href='https://docs.pears.com/reference/bare-overview.html' target='_blank' rel='noreferrer'>
+              <a
+                href='https://docs.pears.com/reference/bare-overview.html'
+                target='_blank'
+                rel='noreferrer'
+              >
                 Bare
               </a>
               , a <strong>small and modular JavaScript runtime</strong> for desktop and mobile,
@@ -143,16 +147,28 @@ function RuntimeStatsDashboard() {
             <ul className='mt-4'>
               <li>
                 [&nbsp;
-                <a href='https://docs.pears.com/guide/getting-started.html' target='_blank' rel='noreferrer'>
+                <a
+                  href='https://docs.pears.com/guide/getting-started.html'
+                  target='_blank'
+                  rel='noreferrer'
+                >
                   Getting Started
-                </a>&nbsp;
-                ]
+                </a>
+                &nbsp; ]
               </li>
               <li>
-                [&nbsp;<a href='https://docs.pears.com' target='_blank' rel='noreferrer'>Docs</a>&nbsp;]
+                [&nbsp;
+                <a href='https://docs.pears.com' target='_blank' rel='noreferrer'>
+                  Docs
+                </a>
+                &nbsp;]
               </li>
               <li>
-                [&nbsp;<a href='#' target='_blank'>Join the community on Keet</a>&nbsp;]
+                [&nbsp;
+                <a href='#' target='_blank'>
+                  Join the community on Keet
+                </a>
+                &nbsp;]
               </li>
             </ul>
           </div>
