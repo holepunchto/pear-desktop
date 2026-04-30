@@ -67,7 +67,7 @@ function RuntimeStatsDashboard() {
         if (!line) continue
         try {
           onMessage(JSON.parse(line))
-        } catch {}
+        } catch { }
       }
     })
 
@@ -110,7 +110,7 @@ function RuntimeStatsDashboard() {
 
   return (
     <div className='min-h-lvh'>
-      <header className='h-8 flex items-center justify-end px-1.5 mt-px'>
+      <header className='h-8 flex items-center justify-end px-1.5 pt-px'>
         <Badge className='gap-2' variant='secondary'>
           <span>{headerStatus}</span>
           <span className='size-2 bg-yellow-300 animate-pulse rounded-full' />
@@ -119,7 +119,7 @@ function RuntimeStatsDashboard() {
 
       <div className='grid grid-cols-[1fr_minmax(200px,50%)] [--space:--spacing(3)] p-(--space) gap-(--space) md:[--space:--spacing(8)]'>
         <div>
-          <div className='prose'>
+          <div className='prose max-w-prose'>
             <p className='mb-6'>
               <img src={pearSvg} className='h-16' />
             </p>
@@ -129,7 +129,7 @@ function RuntimeStatsDashboard() {
             </p>
             <p>
               Pear is the developer tooling + p2p distribution and runtime. Pear apps run on{' '}
-              <a href='https://docs.pears.com/reference/bare-overview.html' target='_blank'>
+              <a href='https://docs.pears.com/reference/bare-overview.html' target='_blank' rel='noreferrer'>
                 Bare
               </a>
               , a <strong>small and modular JavaScript runtime</strong> for desktop and mobile,
@@ -142,17 +142,17 @@ function RuntimeStatsDashboard() {
 
             <ul className='mt-4'>
               <li>
-                [{' '}
-                <a href='https://docs.pears.com/guide/getting-started.html' target='_blank'>
+                [&nbsp;
+                <a href='https://docs.pears.com/guide/getting-started.html' target='_blank' rel='noreferrer'>
                   Getting Started
-                </a>{' '}
+                </a>&nbsp;
                 ]
               </li>
               <li>
-                [ <a href='https://docs.pears.com'>Docs</a> ]
+                [&nbsp;<a href='https://docs.pears.com' target='_blank' rel='noreferrer'>Docs</a>&nbsp;]
               </li>
               <li>
-                [ <a href='#'>Join the community on Keet</a> ]
+                [&nbsp;<a href='#' target='_blank'>Join the community on Keet</a>&nbsp;]
               </li>
             </ul>
           </div>

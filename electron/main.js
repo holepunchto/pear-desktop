@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, nativeTheme } from 'electron'
+import { app, BrowserWindow, ipcMain, nativeTheme, shell } from 'electron'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { readFileSync } from 'fs'
@@ -257,6 +257,16 @@ async function createWindow() {
   })
 
   bindPearUpdaterToWindow({ getPear: pearManager.getPear, window: win })
+
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith('https://') || url.startsWith('http://')) {
+      void shell.openExternal(url).catch((err) => {
+        console.error('Failed to open external URL:', err)
+      })
+    }
+
+    return { action: 'deny' }
+  })
 
   const devServerUrl = process.env.PEAR_DEV_SERVER_URL
 
