@@ -20,15 +20,22 @@ if (process.env.MAC_CODESIGN_IDENTITY) {
   }
 }
 
+const macMaker = process.env.CI
+  ? {
+      name: '@electron-forge/maker-zip',
+      platforms: ['darwin']
+    }
+  : {
+      name: '@electron-forge/maker-dmg',
+      platforms: ['darwin'],
+      config: {}
+    }
+
 module.exports = {
   packagerConfig,
 
   makers: [
-    {
-      name: '@electron-forge/maker-dmg',
-      platforms: ['darwin'],
-      config: {}
-    },
+    macMaker,
     {
       name: '@forkprince/electron-forge-maker-appimage',
       platforms: ['linux'],
