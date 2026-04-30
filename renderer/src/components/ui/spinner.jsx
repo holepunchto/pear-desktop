@@ -1,5 +1,6 @@
+import Loader2Icon from 'lucide-react/dist/esm/icons/loader-2.mjs'
+
 import { cn } from '@/lib/utils'
-import { Loader2Icon } from 'lucide-react'
 
 function Spinner({ className, ...props }) {
   return (

@@ -7,36 +7,46 @@ const initialState = {
 
 const ThemeProviderContext = createContext(initialState)
 
+function getSystemTheme() {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
+function applyTheme(theme) {
+  const root = window.document.documentElement
+  const resolvedTheme = theme === 'system' ? getSystemTheme() : theme
+
+  root.classList.remove('light', 'dark')
+  root.classList.add(resolvedTheme)
+}
+
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
   storageKey = 'vite-ui-theme',
   ...props
 }) {
-  const [theme, setTheme] = useState(() => localStorage.getItem(storageKey) || defaultTheme)
+  const [theme, setThemeState] = useState(() => localStorage.getItem(storageKey) || defaultTheme)
 
   useEffect(() => {
-    const root = window.document.documentElement
+    applyTheme(theme)
 
-    root.classList.remove('light', 'dark')
+    if (theme !== 'system') return undefined
 
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
+    const media = window.matchMedia('(prefers-color-scheme: dark)')
+    const handleChange = () => applyTheme(theme)
 
-      root.classList.add(systemTheme)
-      return
+    media.addEventListener('change', handleChange)
+
+    return () => {
+      media.removeEventListener('change', handleChange)
     }
-
-    root.classList.add(theme)
   }, [theme])
 
   const value = {
     theme,
     setTheme: (nextTheme) => {
       localStorage.setItem(storageKey, nextTheme)
-      setTheme(nextTheme)
+      setThemeState(nextTheme)
     }
   }
 

@@ -10,7 +10,7 @@ export const State = {
   updated: 'UPDATED'
 }
 
-const copy = {
+const COPY = {
   [State.updating]: {
     title: 'Update discovered',
     description: 'Applying in the background…'
@@ -19,6 +19,27 @@ const copy = {
     title: 'Update available',
     description: 'Restart to upgrade'
   }
+}
+
+function UpdateAction({ onRestart, status }) {
+  if (status === State.updating) {
+    return (
+      <Badge variant='secondary'>
+        <Spinner data-icon='inline-start' />
+        Updating
+      </Badge>
+    )
+  }
+
+  if (status === State.updated) {
+    return (
+      <Button size='xs' variant='default' onClick={onRestart}>
+        Restart
+      </Button>
+    )
+  }
+
+  return null
 }
 
 export default function UpdateNotice() {
@@ -40,33 +61,7 @@ export default function UpdateNotice() {
 
   if (status === State.idle) return null
 
-  const labels = copy[status]
-  let action
-  switch (status) {
-    case State.updating: {
-      action = (
-        <Badge variant='secondary'>
-          <Spinner data-icon='inline-start' />
-          Updating
-        </Badge>
-      )
-      break
-    }
-    case State.updated: {
-      action = (
-        <Button
-          size='xs'
-          variant='default'
-          onClick={() => window.bridge.applyUpdate().then(() => window.bridge.appAfterUpdate())}
-        >
-          Restart
-        </Button>
-      )
-      break
-    }
-    default:
-      break
-  }
+  const labels = COPY[status]
 
   return (
     <div className='fixed right-5 bottom-5'>
@@ -74,7 +69,14 @@ export default function UpdateNotice() {
         <AlertTitle>{labels.title}</AlertTitle>
         <AlertDescription className='flex flex-col gap-2'>
           <div>{labels.description}</div>
-          <div>{action}</div>
+          <div>
+            <UpdateAction
+              status={status}
+              onRestart={() =>
+                window.bridge.applyUpdate().then(() => window.bridge.appAfterUpdate())
+              }
+            />
+          </div>
         </AlertDescription>
       </Alert>
     </div>
