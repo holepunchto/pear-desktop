@@ -35,7 +35,7 @@
     "bare-fs": "^4.7.1",
     "bare-path": "^3.0.0",
     "bare-url": "^2.4.2",
-    "pear-runtime-electron": "git+https://github.com/mikker/pear-runtime-electron.git"
+    "pear-runtime-electron": "file:vendor/pear-runtime-electron"
   },
   "devDependencies": {
     "@base-ui/react": "^1.2.0",
@@ -78,5 +78,8 @@
   "bugs": {
     "url": "https://github.com/holepunchto/pear-desktop/issues"
   },
-  "homepage": "https://github.com/holepunchto/pear-desktop#readme"
+  "homepage": "https://github.com/holepunchto/pear-desktop#readme",
+  "overrides": {
+    "@electron/node-gyp": "10.2.0-electron.1"
+  }
 }
