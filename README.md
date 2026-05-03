@@ -15,6 +15,7 @@ pear run pear://runtime
 ```
 git clone https://github.com/holepunchto/pear-desktop
 cd pear-desktop
+npm i
 pear run --dev .
 ```
 
