@@ -1,0 +1,14 @@
+entries = {
+  'devtools-frontend': 'https://chromium.googlesource.com/devtools/devtools-frontend.git',
+  'devtools-frontend/build': 'https://chromium.googlesource.com/chromium/src/build.git@a1e1178df0816e00e08a85df65c54f5e4852ca22',
+  'devtools-frontend/buildtools': 'https://chromium.googlesource.com/chromium/src/buildtools.git@1267724b67c1e44a778f610ae9dac191f06e2ff4',
+  'devtools-frontend/buildtools/mac:gn/gn/mac-${arch}': 'https://chrome-infra-packages.appspot.com/gn/gn/mac-${arch}@git_revision:4619125bd337d259c0dc9f958d0102adc99d2543',
+  'devtools-frontend/third_party/clang-format/script': 'https://chromium.googlesource.com/external/github.com/llvm/llvm-project/clang/tools/clang-format.git@c2725e0622e1a86d55f14514f2177a39efea4a0e',
+  'devtools-frontend/third_party/depot_tools': 'https://chromium.googlesource.com/chromium/tools/depot_tools.git@8efa575d754b8703d99b0f827528e45aeaa167aa',
+  'devtools-frontend/third_party/esbuild:infra/3pp/tools/esbuild/${platform}': 'https://chrome-infra-packages.appspot.com/infra/3pp/tools/esbuild/${platform}@version:3@0.25.1.chromium.2',
+  'devtools-frontend/third_party/inspector_protocol': 'https://chromium.googlesource.com/deps/inspector_protocol@679b33a98ae546ff521eee2ea28d8d5bf28872ba',
+  'devtools-frontend/third_party/ninja:infra/3pp/tools/ninja/${platform}': 'https://chrome-infra-packages.appspot.com/infra/3pp/tools/ninja/${platform}@version:3@1.12.1.chromium.4',
+  'devtools-frontend/third_party/node/mac_arm64:1db2bd673e8633aa5e9450caa0e8f2c4702feb7e': 'gs://chromium-nodejs/1db2bd673e8633aa5e9450caa0e8f2c4702feb7e',
+  'devtools-frontend/third_party/siso:build/siso/${platform}': 'https://chrome-infra-packages.appspot.com/build/siso/${platform}@git_revision:03ee208f9c31a303e1ba61f9bc7219158078bd50',
+  'devtools-frontend/buildtools/mac_arm64-format:8503422f469ae56cc74f0ea2c03f2d872f4a2303': 'gs://chromium-clang-format/8503422f469ae56cc74f0ea2c03f2d872f4a2303',
+}

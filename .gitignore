@@ -123,3 +123,8 @@ dist
 .yarn/install-state.gz
 .pnp.*
 todo.*
+
+# chromium devtools
+vendor/devtools-frontend
+vendor/chromium/devtools-frontend
+vendor/chromium/.cipd
